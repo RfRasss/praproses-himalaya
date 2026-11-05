@@ -10,12 +10,12 @@ const TEKS = {
   galat: {
     opsi: "Daftar pilihan tidak bisa dimuat.",
     metrik: "Metrik model tidak bisa dimuat.",
-    prediksi: "Prediksi gagal.",
-    server: (kode) => `Server menjawab ${kode}.`,
+    prediksi: "Prediksi gagal. Coba sekali lagi.",
+    server: (kode) => `Server menjawab dengan kode ${kode}.`,
   },
 
   hasil: {
-    kalimat: (dari100, banding) => `Dari 100 pendaki dengan rencana seperti ini, sekitar ${dari100} diperkirakan mencapai puncak, ${banding}.`,
+    kalimat: (dari100, banding) => `Dari 100 pendaki dengan rencana seperti ini, sekitar ${dari100} diperkirakan sampai di puncak, ${banding}.`,
     banding: (arah, rata) => `${arah} rata-rata data uji (${rata})`,
     di_atas: "di atas",
     di_bawah: "di bawah",
@@ -26,18 +26,18 @@ const TEKS = {
 
   model: {
     ringkas: (pemenang, nLatih, tahun, nUji) =>
-      `${pemenang} menang validasi silang. Dilatih pada ${nLatih} baris sampai tahun ${tahun}, diuji pada ${nUji} baris sesudahnya.`,
+      `${pemenang} menang di validasi silang. Modelnya dilatih dengan ${nLatih} baris sampai tahun ${tahun}, lalu diuji dengan ${nUji} baris sesudahnya.`,
     stat: {
-      auc: "AUC pada data uji",
-      akurasi: (dasar) => `Akurasi, tebakan kelas mayoritas ${dasar}`,
-      brier: "Brier pada data uji, makin kecil makin baik",
-      f1: "F1 pada data uji",
+      auc: "AUC di data uji: kemampuan membedakan pendaki yang sampai dan tidak (1 sempurna, 0,5 sama dengan menebak)",
+      akurasi: (dasar) => `Akurasi di data uji. Menebak kelas terbanyak saja sudah menghasilkan ${dasar}`,
+      brier: "Brier di data uji: rata-rata kuadrat selisih prediksi dan kenyataan, makin kecil makin baik",
+      f1: "F1 di data uji: gabungan ketepatan dan kelengkapan dalam menebak yang berhasil",
     },
     banding: { kepala: ["Algoritma", "AUC validasi", "AUC uji", "Akurasi uji", "Brier uji"] },
     kelompok: { kepala: ["Kelompok", "Baris uji", "Nyata", "Prediksi", "AUC"], M: "Laki-laki", F: "Perempuan" },
     oksigen: (aucPenuh, aucTanpa) =>
-      `Oksigen mendominasi model. Tanpa dua kolom oksigen, AUC uji turun dari ${aucPenuh} ke ${aucTanpa}. ` +
-      "Kami belum memeriksa apakah kolom itu dicatat sebelum atau sesudah hasil pendakian diketahui, jadi sebagian sinyalnya bisa jadi bocoran.",
+      `Oksigen sangat menentukan. Tanpa dua kolom oksigen, AUC uji turun dari ${aucPenuh} ke ${aucTanpa}. ` +
+      "Kami belum memeriksa apakah kolom itu dicatat sebelum atau sesudah hasil pendakian diketahui. Kalau sesudah, sebagian kemampuan model itu bocoran.",
   },
 
   kalibrasi: {
@@ -45,19 +45,19 @@ const TEKS = {
     sumbuY: "Kejadian nyata (%)",
     titik: (prediksi, nyata) => `Prediksi ${prediksi}, nyata ${nyata}`,
     uraian: (celah, rata, nyata) =>
-      `Sepuluh kelompok prediksi di data uji. Titik di garis putus-putus berarti jujur. Selisih terbesar ${celah} poin persen, ` +
-      `rata-rata prediksi ${rata} lawan kenyataan ${nyata}. Model tidak dikalibrasi ulang karena kurvanya sudah dekat diagonal.`,
+      `Prediksi di data uji dibagi jadi sepuluh kelompok. Makin dekat titik ke garis putus-putus, makin pas angkanya. Selisih terbesar ${celah} poin persen. ` +
+      `Rata-rata prediksi ${rata}, kenyataannya ${nyata}. Model tidak dikalibrasi ulang karena kurvanya sudah dekat diagonal.`,
   },
 
   geser: {
     latih: "data latih",
     uji: "data uji",
-    legenda: "garis: nyata, kotak kosong: prediksi",
+    legenda: "garis: kenyataan, kotak kosong: prediksi",
     titik: (tahun, prediksi, nyata) => `${tahun}: prediksi ${prediksi}, nyata ${nyata}`,
     baca: (tahun, berhasil, baris) => `${tahun}: ${berhasil} berhasil, ${baris} baris`,
     uraian: (latih, uji, lebih, total) =>
-      `Tingkat keberhasilan naik dari ${latih} di data latih ke ${uji} di data uji. ` +
-      `Model terlalu optimis di ${lebih} dari ${total} tahun uji, jadi angka per tahun tetap perlu dibaca hati-hati.`,
+      `Tingkat keberhasilan naik dari ${latih} di data latih menjadi ${uji} di data uji. ` +
+      `Model terlalu optimis di ${lebih} dari ${total} tahun uji, jadi baca angka per tahun dengan hati-hati.`,
     tabel: ["Tahun uji", "Baris", "Nyata", "Prediksi", "Akurasi", "Brier"],
   },
 

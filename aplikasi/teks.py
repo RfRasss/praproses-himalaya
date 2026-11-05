@@ -15,9 +15,9 @@ TIM_DUA_KALI = "Tim dua kali lebih besar"
 TANPA_STAF = "Tanpa staf bayaran"
 
 # Peringatan masukan di luar sebaran.
-USIA_JARANG = "Usia ini jarang di data latih, tebakan kurang bisa diandalkan."
-TIM_JARANG = "Ukuran tim ini jarang di data latih, tebakan kurang bisa diandalkan."
-SOLO_TIM_BESAR = "Pendakian solo biasanya tim berisi satu orang. Periksa isian Anda."
+USIA_JARANG = "Usia ini jarang ada di data latih, jadi prediksinya kurang bisa diandalkan."
+TIM_JARANG = "Ukuran tim ini jarang ada di data latih, jadi prediksinya kurang bisa diandalkan."
+SOLO_TIM_BESAR = "Pendakian solo biasanya berarti tim satu orang. Coba periksa isian Anda."
 
 # Pesan galat API.
 TIDAK_DIKENAL = "{kolom} tidak dikenal: {nilai}"

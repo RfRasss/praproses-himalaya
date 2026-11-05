@@ -39,7 +39,7 @@
       <svg id="salju" class="hero__salju" aria-hidden="true" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice"></svg>
       <div class="hero__txt">
         <h1 id="h-prediksi">Seberapa besar peluang Anda sampai puncak?</h1>
-        <p class="lead">Pilih puncak, susun rencana, lalu lihat pendaki naik. Angkanya dihitung dari 76.519 catatan pendakian Himalaya.</p>
+        <p class="lead">Pilih puncak dan isi rencana Anda. Pendaki di alat ukur sebelah kanan naik sejauh peluangnya. Angkanya dihitung dari 76.519 catatan pendakian Himalaya.</p>
       </div>
       <div class="hero__ukur">
         <svg id="gunung" viewBox="0 0 170 400" role="img" aria-label="Alat ukur ketinggian. Pendaki naik sejauh peluang prediksi."></svg>
@@ -90,16 +90,16 @@
           <label class="check"><input type="checkbox" name="hired"> Saya staf bayaran</label>
           <label class="check"><input type="checkbox" name="solo"> Pendakian solo</label>
         </div>
-        <p class="cell cell--wide fine">Tahun rencana dipatok ke 2019, tahun terakhir di data. Rekam jejak agen trekking dikosongkan dan diisi median data latih.</p>
+        <p class="cell cell--wide fine">Model memakai 2019 sebagai tahun rencana, karena itu tahun terakhir di data. Rekam jejak agen trekking tidak ditanyakan, jadi model mengisinya dengan nilai tengah dari data latih.</p>
       </form>
 
       <section class="hasil" aria-live="polite" aria-labelledby="h-hasil">
         <h2 id="h-hasil">Peluang sampai puncak</h2>
         <div id="hasil" data-state="memuat">
           <div class="skel" aria-hidden="true"></div>
-          <p class="state state--memuat">Menghitung.</p>
+          <p class="state state--memuat">Sedang menghitung.</p>
           <div class="state state--galat" role="alert">
-            <p id="galat-teks">Prediksi gagal.</p>
+            <p id="galat-teks">Prediksi gagal. Coba sekali lagi.</p>
             <button class="btn btn--quiet" type="button" id="ulangi">Coba lagi</button>
           </div>
           <div class="state state--isi">
@@ -108,14 +108,14 @@
             <ul id="peringatan" class="peringatan"></ul>
             <figure class="fig">
               <svg id="dim" role="img" aria-label="Skala peluang dari 0 sampai 100 persen"></svg>
-              <figcaption class="fine">Tanda besar adalah prediksi Anda. Tanda kecil adalah skenario di tabel. Garis putus-putus adalah tingkat keberhasilan rata-rata di data.</figcaption>
+              <figcaption class="fine">Tanda tebal menunjukkan prediksi Anda, tanda kecil menunjukkan skenario di tabel. Dua garis putus-putus adalah rata-rata keberhasilan di data latih dan data uji.</figcaption>
             </figure>
             <h3>Ganti satu keputusan, lihat akibatnya</h3>
             <table class="register">
               <thead><tr><th scope="col">Skenario</th><th scope="col" class="num">Peluang</th><th scope="col" class="num">Selisih</th></tr></thead>
               <tbody id="skenario"></tbody>
             </table>
-            <p class="fine">Selisih ini perbandingan prediksi model, bukan bukti sebab-akibat. Oksigen paling menentukan di data, tapi kami belum memeriksa apakah kolomnya dicatat sebelum atau sesudah hasil pendakian diketahui.</p>
+            <p class="fine">Selisih ini hanya membandingkan prediksi model, bukan membuktikan sebab dan akibat. Oksigen paling berpengaruh di data. Kami belum memeriksa apakah kolom itu dicatat sebelum atau sesudah hasil pendakian diketahui.</p>
           </div>
         </div>
       </section>
@@ -124,18 +124,18 @@
 
   <section id="model" class="view" aria-labelledby="h-model">
     <h1 id="h-model">Seberapa jujur angka ini?</h1>
-    <p class="lead" id="ringkas-model">Memuat metrik.</p>
+    <p class="lead" id="ringkas-model">Memuat angka model.</p>
 
     <div class="stats" id="stats"></div>
 
     <div class="grid2">
       <section aria-labelledby="h-banding">
-        <h2 id="h-banding">Tiga algoritma, satu praproses</h2>
+        <h2 id="h-banding">Tiga algoritma diadu</h2>
         <table class="register" id="banding"></table>
-        <p class="fine">Pemenang dipilih dari validasi silang di data latih, dikelompokkan per ekspedisi. Data uji hanya dipakai sekali di akhir.</p>
+        <p class="fine">Pemenang dipilih lewat validasi silang di data latih, dan tiap ekspedisi selalu utuh di satu sisi. Data uji baru dipakai sekali di akhir.</p>
       </section>
       <section aria-labelledby="h-kalibrasi">
-        <h2 id="h-kalibrasi">Apakah angkanya jujur</h2>
+        <h2 id="h-kalibrasi">Apakah 70% benar-benar 70%?</h2>
         <figure class="fig"><svg id="kalibrasi" role="img" aria-label="Diagram reliabilitas: peluang prediksi lawan kejadian nyata"></svg></figure>
         <p class="fine" id="kalibrasi-teks"></p>
       </section>
@@ -152,12 +152,12 @@
       <section aria-labelledby="h-penting">
         <h2 id="h-penting">Apa yang paling dipakai model</h2>
         <figure class="fig"><svg id="penting" role="img" aria-label="Penurunan AUC saat tiap fitur diacak"></svg></figure>
-        <p class="fine">Permutasi pada data uji: seberapa turun AUC kalau satu kolom diacak. Fitur yang berkorelasi saling mengurangi nilainya.</p>
+        <p class="fine">Cara membacanya: kolom diacak satu per satu, lalu dilihat seberapa turun AUC. Makin besar turunnya, makin model bergantung pada kolom itu. Kolom yang saling berkaitan bisa saling menutupi.</p>
       </section>
       <section aria-labelledby="h-kelompok">
-        <h2 id="h-kelompok">Adil untuk siapa</h2>
+        <h2 id="h-kelompok">Hasil per jenis kelamin</h2>
         <table class="register" id="kelompok"></table>
-        <p class="fine">Pendaki perempuan jauh lebih sedikit, jadi lihat jumlah barisnya sebelum membandingkan. Kelompok kewarganegaraan tidak ditampilkan karena banyak yang hanya berisi beberapa baris.</p>
+        <p class="fine">Pendaki perempuan jauh lebih sedikit, jadi lihat kolom jumlah baris sebelum membandingkan. Kewarganegaraan tidak ditampilkan karena banyak negara hanya punya beberapa baris.</p>
       </section>
     </div>
 
@@ -165,12 +165,12 @@
       <h2 id="h-batas">Batasan</h2>
       <ul>
         <li id="bt-oksigen">Oksigen mendominasi model.</li>
-        <li>Untuk belajar pembelajaran mesin, bukan untuk memutuskan berangkat atau tidak. Jangan dipakai sebagai alat keselamatan.</li>
-        <li>Satu baris data adalah satu pendaki. Peluangnya milik pendaki itu, bukan milik ekspedisi.</li>
-        <li>Datanya berhenti di 2019. Situs resmi Himalayan Database sudah memuat musim yang lebih baru.</li>
-        <li>Tingkat keberhasilan di data latih dan data uji berbeda jauh. Model tidak punya fitur tahun, jadi perubahan zaman hanya tertangkap lewat usia puncak.</li>
-        <li>Hanya puncak dengan seratus baris atau lebih yang bisa dipilih. Rekam jejak agen diisi median karena pengguna tidak punya angkanya.</li>
-        <li>Pembagian latih dan uji memakai tahun, dan validasi silang menjaga satu ekspedisi tetap utuh. Keputusannya ada di catatan praproses.</li>
+        <li>Aplikasi ini untuk belajar pembelajaran mesin. Jangan memakainya untuk memutuskan berangkat atau tidak, dan jangan menganggapnya alat keselamatan.</li>
+        <li>Satu baris data adalah satu pendaki, jadi peluangnya milik pendaki itu, bukan milik seluruh ekspedisi.</li>
+        <li>Datanya berhenti di 2019, padahal situs resmi Himalayan Database sudah memuat musim yang lebih baru.</li>
+        <li>Tingkat keberhasilan jauh lebih tinggi di data uji daripada di data latih. Model tidak punya kolom tahun, jadi perubahan zaman hanya tertangkap lewat lama puncak sudah didaki.</li>
+        <li>Hanya puncak dengan 100 baris data atau lebih yang bisa dipilih. Rekam jejak agen tidak ditanyakan, jadi model mengisinya dengan nilai tengah.</li>
+        <li>Data latih dan data uji dibagi menurut tahun, dan validasi silang menjaga satu ekspedisi tetap utuh. Alasannya ada di catatan/keputusan-praproses.md.</li>
       </ul>
     </section>
   </section>
