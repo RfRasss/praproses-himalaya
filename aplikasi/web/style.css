@@ -16,8 +16,7 @@
 .bar { position: sticky; top: 0; z-index: var(--z-sticky-nav); background: var(--color-paper); border-bottom: var(--rule-bar) solid var(--color-ink); }
 .bar__in { display: flex; align-items: center; justify-content: space-between; gap: var(--space-lg); min-height: 60px; }
 .wordmark { display: inline-flex; align-items: center; gap: var(--space-xs); font: 800 var(--text-xl)/1 var(--font-display); text-decoration: none; text-transform: uppercase; white-space: nowrap; }
-.logo { width: 26px; height: 20px; overflow: visible; }
-.logo__p { fill: var(--color-accent); stroke: none; }
+.logo { width: 32px; height: 32px; }
 .bar nav { display: flex; gap: var(--space-2xs); }
 .bar nav a { white-space: nowrap; display: inline-flex; align-items: center; min-height: 44px; padding: 0 var(--space-md); border-bottom: var(--rule-bar) solid transparent; text-decoration: none; font-weight: 500; transition: border-color var(--dur-short) var(--ease-out), color var(--dur-short) var(--ease-out); }
 .bar nav a:hover { color: var(--color-accent); }
@@ -206,7 +205,7 @@ input[aria-invalid="true"] { border-color: var(--color-error); }
   .bar__kanan { gap: var(--space-xs); }
   .bar nav { gap: 0; }
   .bar nav a { padding: 0 var(--space-sm); }
-  .logo { width: 20px; }
+  .logo { width: 26px; height: 26px; }
   .register { display: block; overflow-x: auto; }
   .fig:has(#geser) { overflow-x: auto; }
   #geser { min-width: 640px; }

@@ -22,6 +22,9 @@ The locked system. Every Hallmark run reads this first and pages share it. Chang
 ```
 Two tokens are added in `style.css`: `--color-rule-2` (ink at 22%) and `--color-scrim` (ink at 78%, the solid panel under text that sits on a photograph). The spacing scale, type scale, easings and durations live in `tokens.css`.
 
+## Mark
+- `aplikasi/web/ikon.svg`: a white two-peak mountain with a black snowy tip, black outline, a cool grey shaded face. It is the favicon (with `ikon.png` as a 64px fallback) and the header logo.
+
 ## Type
 - Display: Barlow Condensed 800, uppercase, for every head, figure and button.
 - Body and labels: Barlow 400 and 500, sentence case, untracked.
