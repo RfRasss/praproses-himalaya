@@ -11,9 +11,18 @@ MIN_BARIS_KATEGORI = 50  # sama dengan ambang kategori jarang di pipeline
 TAHUN_RENCANA = 2019  # tahun terakhir di data; model tidak punya fitur tahun
 
 
+KOLOM_KATALOG = [
+    "peak_id", "peak_name", "height_metres", "climbing_status", "first_ascent_year",
+    "first_ascent_country", "success", "expedition_role", "citizenship", "season",
+    "basecamp_month", "age", "team_size",
+]
+
+
 @lru_cache
 def katalog() -> dict:
-    df = pd.read_parquet(OLAHAN / "himalaya_bersih.parquet")
+    # Hanya kolom yang dipakai katalog. Membaca seluruh 32 kolom memakai ratusan MB
+    # memori yang tidak pernah dikembalikan ke sistem.
+    df = pd.read_parquet(OLAHAN / "himalaya_bersih.parquet", columns=KOLOM_KATALOG)
 
     jumlah = df.groupby("peak_id").size()
     puncak = (
