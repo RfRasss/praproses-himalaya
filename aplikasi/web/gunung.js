@@ -2,24 +2,13 @@
 
 // Hero: foto nyata puncak yang dipilih, salju yang turun, dan alat ukur
 // ketinggian tempat pendaki naik sejauh peluang prediksi. Skala alat ukur dari
-// tinggi puncak yang nyata. Memakai h() dari app.js, yang baru dipanggil setelah
-// kedua berkas termuat.
+// tinggi puncak yang nyata. Memakai alat dari util.js dan kalimat dari teks.js.
 const Gunung = (() => {
-  // Hanya lima puncak yang punya foto sendiri. Sisanya memakai Pumori dan diberi tahu.
+  // Lima puncak punya foto sendiri (foto/<kode>.jpg). Sisanya memakai Pumori dan diberi tahu.
   const FOTO = { EVER: "ever", LHOT: "lhot", AMAD: "amad", CHOY: "choy", MAKA: "maka" };
-  const ISI_FOTO = {
-    ever: "Everest dan Nuptse dari Kala Patthar",
-    lhot: "Everest, Lhotse, dan Nuptse",
-    amad: "Ama Dablam",
-    choy: "Cho Oyu",
-    maka: "Makalu dan Chamlang",
-    umum: "Pumori",
-  };
   const ALAS = 4500; // meter, dasar alat ukur
   const Y_ATAS = 88, Y_BAWAH = 352, X = 92;
   const yDari = (m, tinggi) => Y_BAWAH - ((m - ALAS) / (tinggi - ALAS)) * (Y_BAWAH - Y_ATAS);
-  const kurangGerak = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const rib = (m) => m.toLocaleString("id-ID");
 
   let svg, hero, foto, aktif = 0, daftar = [], p = 0, tinggi = 8850, penanda, progres, label;
 
@@ -48,7 +37,7 @@ const Gunung = (() => {
     const muat = new Image();
     muat.onload = () => {
       berikut.src = muat.src;
-      berikut.alt = pengganti ? `${ISI_FOTO[kode]}, foto pengganti` : `${ISI_FOTO[kode]}, Himalaya`;
+      berikut.alt = (pengganti ? TEKS.gunung.altPengganti : TEKS.gunung.alt)(TEKS.gunung.foto[kode]);
       berikut.classList.add("on");
       foto[aktif].classList.remove("on");
       aktif = 1 - aktif;
@@ -62,7 +51,7 @@ const Gunung = (() => {
     const a = h("g", { class: "gu-skala" });
     for (let m = Math.ceil(ALAS / 1000) * 1000; m < tinggi - 150; m += 1000) {
       a.append(h("line", { x1: X - 8, x2: X + 8, y1: yDari(m, tinggi), y2: yDari(m, tinggi), class: "gu-tik" }),
-        h("text", { x: X - 14, y: yDari(m, tinggi) + 5, class: "gu-t", "text-anchor": "end" }, `${rib(m)} m`));
+        h("text", { x: X - 14, y: yDari(m, tinggi) + 5, class: "gu-t", "text-anchor": "end" }, `${ribuan(m)} m`));
     }
     progres = h("line", { x1: X, x2: X, y1: Y_BAWAH, y2: Y_ATAS, class: "gu-progres", pathLength: 100 });
     label = h("text", { x: 16, y: 5, class: "gu-pct" }, "0%");
@@ -75,8 +64,8 @@ const Gunung = (() => {
         h("line", { x1: 0, x2: 0, y1: 0, y2: -32, class: "gu-tiang" }),
         h("polygon", { points: "0,-32 22,-25 0,-18", class: "gu-bendera" })),
       h("text", { x: X, y: 16, class: "gu-nama", "text-anchor": "middle" }, q.nama),
-      h("text", { x: X, y: 36, class: "gu-t", "text-anchor": "middle" }, `${rib(q.tinggi)} m`),
-      h("text", { x: X, y: Y_BAWAH + 26, class: "gu-t", "text-anchor": "middle" }, "Basecamp"),
+      h("text", { x: X, y: 36, class: "gu-t", "text-anchor": "middle" }, `${ribuan(q.tinggi)} m`),
+      h("text", { x: X, y: Y_BAWAH + 26, class: "gu-t", "text-anchor": "middle" }, TEKS.gunung.basecamp),
       penanda);
     letakkan(true);
   }
@@ -114,7 +103,7 @@ const Gunung = (() => {
       if (!q) return;
       const kode = FOTO[id] || "umum";
       tukarFoto(kode, !FOTO[id]);
-      document.getElementById("foto-ket").textContent = FOTO[id] ? "" : `Foto: ${ISI_FOTO.umum}. ${q.nama} belum punya foto sendiri.`;
+      document.getElementById("foto-ket").textContent = FOTO[id] ? "" : TEKS.gunung.keterangan(TEKS.gunung.foto.umum, q.nama);
       ukur(q);
     },
     setPeluang(v) { p = v; letakkan(false); },

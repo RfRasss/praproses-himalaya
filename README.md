@@ -78,7 +78,10 @@ aplikasi/
   main.py           rute API dan penyaji halaman web
   layanan.py        dari masukan formulir ke prediksi, skenario, peringatan
   katalog.py        pilihan formulir dari data
-  web/              halaman (HTML, CSS, JavaScript tanpa build)
+  teks.py           kalimat dari server
+  web/              halaman: index.html, style.css, teks.js (kalimat),
+                    util.js (alat kecil), app.js (layar Prediksi),
+                    grafik.js (layar Model), gunung.js (foto dan alat ukur)
 jalankan.py         skrip utama
 ```
 
@@ -169,6 +172,17 @@ Satu catatan jujur: oksigen mendominasi. Tanpa dua kolom oksigen, AUC uji turun
 ke 0,701. Kami belum memeriksa apakah kolom itu dicatat sebelum atau sesudah
 hasil pendakian, jadi sebagian sinyalnya bisa jadi bocoran. Batasan lengkap ada
 di halaman Model dan di `catatan/adr-aplikasi.md`.
+
+## Mengubah teks
+
+Semua kata ada di tiga tempat, dan tidak ada yang tersebar di tempat lain.
+
+- `aplikasi/web/index.html`: judul, label formulir, catatan kecil, daftar batasan.
+- `aplikasi/web/teks.js`: kalimat yang dicetak JavaScript (hasil, kartu model, grafik, nama fitur, keterangan foto).
+- `aplikasi/teks.py`: nama skenario, peringatan, pesan galat, dan nama musim.
+
+Setelah mengubah `teks.py`, mulai ulang server. Dua yang lain cukup dimuat ulang
+di browser. Sistem tampilannya terkunci di `design.md`.
 
 ## Foto
 

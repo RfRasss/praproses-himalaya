@@ -8,7 +8,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
-from . import layanan
+from . import layanan, teks
 from .katalog import katalog
 
 WEB = Path(__file__).parent / "web"
@@ -41,7 +41,7 @@ def opsi():
         ],
         "peran": k["peran"],
         "negara": k["negara"],
-        "musim": list(k["bulan_musim"]),
+        "musim": [{"id": m, "nama": teks.MUSIM[m]} for m in k["bulan_musim"]],
     }
 
 
@@ -51,9 +51,9 @@ def prediksi(masukan: Masukan):
     k = katalog()
     for kolom, daftar in (("citizenship", k["negara"]), ("role", k["peran"])):
         if m[kolom] not in daftar:
-            raise HTTPException(422, f"{kolom} tidak dikenal: {m[kolom]}")
+            raise HTTPException(422, teks.TIDAK_DIKENAL.format(kolom=kolom, nilai=m[kolom]))
     if m["peak_id"] not in k["puncak"].index:
-        raise HTTPException(422, f"peak_id tidak dikenal: {m['peak_id']}")
+        raise HTTPException(422, teks.TIDAK_DIKENAL.format(kolom="peak_id", nilai=m["peak_id"]))
     dasar = layanan.peluang(m)
     return {
         "peluang": dasar,

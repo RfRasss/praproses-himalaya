@@ -10,6 +10,7 @@ import pandas as pd
 
 from praproses.pipeline import FITUR
 
+from . import teks
 from .katalog import TAHUN_RENCANA, katalog
 
 MODEL = Path(__file__).parent.parent / "model"
@@ -71,10 +72,10 @@ def skenario(m: dict, dasar: float) -> list[dict]:
     yang berubah kalau satu hal saja diganti. Selisih ini sifatnya
     prediktif, bukan sebab-akibat.
     """
-    pilihan = [(f"{'Tanpa' if m['oxygen'] else 'Dengan'} oksigen tambahan", {"oxygen": not m["oxygen"]})]
-    pilihan += [(f"Musim {s.lower()}", {"season": s}) for s in katalog()["bulan_musim"] if s != m["season"]]
-    pilihan.append(("Tim dua kali lebih besar", {"team_size": min(m["team_size"] * 2, 99)}))
-    pilihan.append(("Tanpa staf bayaran", {"hired_staff": 0}))
+    pilihan = [(teks.TANPA_OKSIGEN if m["oxygen"] else teks.DENGAN_OKSIGEN, {"oxygen": not m["oxygen"]})]
+    pilihan += [(teks.GANTI_MUSIM.format(musim=teks.MUSIM[s].lower()), {"season": s}) for s in katalog()["bulan_musim"] if s != m["season"]]
+    pilihan.append((teks.TIM_DUA_KALI, {"team_size": min(m["team_size"] * 2, 99)}))
+    pilihan.append((teks.TANPA_STAF, {"hired_staff": 0}))
 
     hasil = []
     for label, ubah in pilihan:
@@ -87,11 +88,11 @@ def skenario(m: dict, dasar: float) -> list[dict]:
 
 def peringatan(m: dict) -> list[str]:
     r = katalog()["rentang"]
-    teks = []
+    hasil = []
     if not r["age"][0] <= m["age"] <= r["age"][1]:
-        teks.append("Usia ini jarang di data latih, tebakan kurang bisa diandalkan.")
+        hasil.append(teks.USIA_JARANG)
     if not r["team_size"][0] <= m["team_size"] <= r["team_size"][1]:
-        teks.append("Ukuran tim ini jarang di data latih, tebakan kurang bisa diandalkan.")
+        hasil.append(teks.TIM_JARANG)
     if m["solo"] and m["team_size"] > 1:
-        teks.append("Pendakian solo biasanya tim berisi satu orang. Periksa isian Anda.")
-    return teks
+        hasil.append(teks.SOLO_TIM_BESAR)
+    return hasil
