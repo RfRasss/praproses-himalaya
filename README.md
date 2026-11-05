@@ -8,10 +8,14 @@ Masalah yang diangkat kelompok: memprediksi apakah seorang pendaki berhasil
 mencapai puncak, berdasarkan rencana ekspedisinya. Jadi ini masalah klasifikasi
 biner.
 
-Yang dikerjakan di sini: menggabungkan tiga tabel sumber, membuang kolom yang
+Repositori ini juga memuat model dan aplikasinya: pelatihan tiga algoritma,
+API FastAPI, dan halaman web tempat Anda mengisi rencana ekspedisi lalu melihat
+peluang suksesnya.
+
+Yang dikerjakan di bagian praproses: menggabungkan tiga tabel sumber, membuang kolom yang
 bocor, membuat fitur turunan, menangani nilai kosong dan nilai janggal, lalu
-membagi data latih dan uji. Pemilihan algoritma dan evaluasi model dikerjakan
-anggota lain.
+membagi data latih dan uji. Pemilihan algoritma dan evaluasi model ada di
+`pemodelan/`.
 
 ## Cara menjalankan
 
@@ -26,11 +30,23 @@ Perintah itu mengunduh data mentah kalau belum ada, memprosesnya, lalu menulis
 tiga berkas ke `data/olahan/` dan satu ringkasan ke `catatan/ringkasan-data.md`.
 Lama jalannya sekitar sepuluh detik.
 
+Lalu latih model dan jalankan aplikasinya:
+
+```bash
+python -m pemodelan.latih                 # sekitar 45 detik, menulis model/
+uvicorn aplikasi.main:app                 # buka http://127.0.0.1:8000
+```
+
+Halaman Prediksi menerima rencana ekspedisi. Halaman Model memuat kartu model:
+perbandingan algoritma, diagram kalibrasi, pergeseran tingkat sukses per tahun,
+fitur terpenting, kinerja per jenis kelamin, dan batasan.
+
 Untuk memastikan hasilnya benar:
 
 ```bash
 python uji/uji_praproses.py    # 29 pemeriksaan, harus lulus semua
 python uji/cek_kewarasan.py    # memastikan data punya sinyal dan tidak bocor
+python uji/uji_aplikasi.py     # 19 pemeriksaan API dan model, jalankan setelah melatih
 ```
 
 ## Isi repositori
@@ -47,8 +63,17 @@ uji/
   cek_kewarasan.py  pemeriksaan sinyal dan kebocoran
 catatan/
   keputusan-praproses.md  alasan tiap keputusan, lengkap dengan angkanya
+  adr-aplikasi.md         arsitektur aplikasi dan tinjauan kodenya
+  riset-fitur-aplikasi.md riset fitur aplikasi, dengan sumber primer
   kamus-variabel.md       arti tiap kolom
   ringkasan-data.md       angka ringkas, dibuat otomatis
+pemodelan/
+  latih.py          bandingkan tiga algoritma, simpan pemenang dan metrik
+aplikasi/
+  main.py           rute API dan penyaji halaman web
+  layanan.py        dari masukan formulir ke prediksi, skenario, peringatan
+  katalog.py        pilihan formulir dari data
+  web/              halaman (HTML, CSS, JavaScript tanpa build)
 jalankan.py         skrip utama
 ```
 
@@ -128,7 +153,14 @@ Diambil lewat cermin TidyTuesday rilis 22 September 2020.
 Berkas mentah tidak ikut disimpan di repositori ini. `jalankan.py` mengunduhnya
 sendiri.
 
-## Catatan
+## Hasil model
 
-Repositori ini baru memuat bagian praproses. Pemodelan, evaluasi, dan aplikasi
-ada di bagian anggota lain.
+Pemenangnya gradient boosting, dipilih dari validasi silang di data latih yang
+dikelompokkan per ekspedisi. Di data uji (2013 ke atas): AUC 0,863, akurasi
+79,1 persen lawan garis dasar 50,1 persen, Brier 0,148. Kurva kalibrasinya
+dekat diagonal.
+
+Satu catatan jujur: oksigen mendominasi. Tanpa dua kolom oksigen, AUC uji turun
+ke 0,701. Kami belum memeriksa apakah kolom itu dicatat sebelum atau sesudah
+hasil pendakian, jadi sebagian sinyalnya bisa jadi bocoran. Batasan lengkap ada
+di halaman Model dan di `catatan/adr-aplikasi.md`.
