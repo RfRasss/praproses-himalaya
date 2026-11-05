@@ -10,7 +10,6 @@ import pandas as pd
 
 from praproses.pipeline import FITUR
 
-from . import teks
 from .katalog import TAHUN_RENCANA, katalog
 
 MODEL = Path(__file__).parent.parent / "model"
@@ -70,29 +69,30 @@ def skenario(m: dict, dasar: float) -> list[dict]:
 
     Ini penjelasan per prediksi tanpa pustaka tambahan: pengguna melihat apa
     yang berubah kalau satu hal saja diganti. Selisih ini sifatnya
-    prediktif, bukan sebab-akibat.
+    prediktif, bukan sebab-akibat. Server hanya mengirim `kode`; kalimatnya
+    ada di aplikasi/web/teks.js, dua bahasa.
     """
-    pilihan = [(teks.TANPA_OKSIGEN if m["oxygen"] else teks.DENGAN_OKSIGEN, {"oxygen": not m["oxygen"]})]
-    pilihan += [(teks.GANTI_MUSIM.format(musim=teks.MUSIM[s].lower()), {"season": s}) for s in katalog()["bulan_musim"] if s != m["season"]]
-    pilihan.append((teks.TIM_DUA_KALI, {"team_size": min(m["team_size"] * 2, 99)}))
-    pilihan.append((teks.TANPA_STAF, {"hired_staff": 0}))
+    pilihan = [("oksigen_tanpa" if m["oxygen"] else "oksigen_dengan", None, {"oxygen": not m["oxygen"]})]
+    pilihan += [("musim", s, {"season": s}) for s in katalog()["bulan_musim"] if s != m["season"]]
+    pilihan.append(("tim_dua", None, {"team_size": min(m["team_size"] * 2, 99)}))
+    pilihan.append(("tanpa_staf", None, {"hired_staff": 0}))
 
     hasil = []
-    for label, ubah in pilihan:
+    for kode, musim, ubah in pilihan:
         if all(m[k] == v for k, v in ubah.items()):
             continue
         p = peluang({**m, **ubah})
-        hasil.append({"label": label, "peluang": p, "selisih": p - dasar})
-    return sorted(hasil, key=lambda s: -abs(s["selisih"]))
+        hasil.append({"kode": kode, "musim": musim, "peluang": p, "selisih": p - dasar})
+    return sorted(hasil, key=lambda x: -abs(x["selisih"]))
 
 
 def peringatan(m: dict) -> list[str]:
     r = katalog()["rentang"]
     hasil = []
     if not r["age"][0] <= m["age"] <= r["age"][1]:
-        hasil.append(teks.USIA_JARANG)
+        hasil.append("usia_jarang")
     if not r["team_size"][0] <= m["team_size"] <= r["team_size"][1]:
-        hasil.append(teks.TIM_JARANG)
+        hasil.append("tim_jarang")
     if m["solo"] and m["team_size"] > 1:
-        hasil.append(teks.SOLO_TIM_BESAR)
+        hasil.append("solo_tim_besar")
     return hasil

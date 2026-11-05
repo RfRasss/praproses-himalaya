@@ -21,6 +21,14 @@
 .bar nav a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 var(--space-md); border-bottom: var(--rule-bar) solid transparent; text-decoration: none; font-weight: 500; transition: border-color var(--dur-short) var(--ease-out), color var(--dur-short) var(--ease-out); }
 .bar nav a:hover { color: var(--color-accent); }
 .bar nav a[aria-current="page"] { border-bottom-color: var(--color-accent); color: var(--color-accent); }
+.bar__kanan { display: flex; align-items: center; gap: var(--space-md); }
+.bhs { display: flex; }
+.bhs button { min-width: 44px; min-height: 44px; padding: 0 var(--space-sm); border: var(--rule-hair) solid var(--color-ink); border-radius: 0; background: var(--color-paper); color: var(--color-ink); font: 800 var(--text-md)/1 var(--font-display); cursor: pointer; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.bhs button + button { border-left: 0; }
+.bhs__singkat { display: none; }
+.bhs button:hover { background: var(--color-paper-3); }
+.bhs button[aria-pressed="true"] { background: var(--color-accent); border-color: var(--color-accent); color: var(--color-accent-ink); }
+.bhs button:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
 main { padding-block: var(--space-xl) var(--space-2xl); }
 .view + .view { margin-top: var(--space-2xl); }
 .view:not([hidden]) { animation: masuk var(--dur-long) var(--ease-out) both; }
@@ -194,6 +202,7 @@ input[aria-invalid="true"] { border-color: var(--color-error); }
   .angka .figure { font-size: calc(var(--text-3xl) * 2.2); }
   .wordmark { font-size: var(--text-lg); gap: var(--space-2xs); }
   .bar__in { gap: var(--space-xs); }
+  .bar__kanan { gap: var(--space-xs); }
   .bar nav { gap: 0; }
   .bar nav a { padding: 0 var(--space-sm); }
   .logo { width: 20px; }
@@ -203,4 +212,11 @@ input[aria-invalid="true"] { border-color: var(--color-error); }
 }
 @media (prefers-reduced-motion: reduce) {
   .serpih { display: none; }
+}
+@media (max-width: 40rem) {
+  .bhs__penuh { display: none; }
+  .bhs__singkat { display: inline; }
+}
+@media (max-width: 30rem) {
+  .wordmark span { display: none; }
 }

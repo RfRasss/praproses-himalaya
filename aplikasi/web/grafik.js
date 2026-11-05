@@ -91,9 +91,12 @@ function gambarPenting(met) {
   });
 }
 
+const namaAlgo = (n) => TEKS.algoritma[n] || n;
+
 function isiModel(met) {
   const m = met.model[met.pemenang].uji, T = TEKS.model;
-  $("ringkas-model").textContent = T.ringkas(met.pemenang, ribuan(met.n_latih), met.tahun_potong, ribuan(met.n_uji));
+  $("pengantar-model").textContent = TEKS.html.model.pengantar(met.tahun_potong + 1);
+  $("ringkas-model").textContent = T.ringkas(namaAlgo(met.pemenang), ribuan(met.n_latih), met.tahun_potong, ribuan(met.n_uji));
 
   const stats = $("stats");
   kosongkan(stats);
@@ -108,7 +111,7 @@ function isiModel(met) {
   tabel($("banding"), T.banding.kepala,
     nama.map((n) => {
       const x = met.model[n];
-      return [n, `${angka(x.auc_cv_rata)} +/- ${angka(x.auc_cv_sd)}`, angka(x.uji.auc), persen(x.uji.akurasi), angka(x.uji.brier)];
+      return [namaAlgo(n), `${angka(x.auc_cv_rata)} +/- ${angka(x.auc_cv_sd)}`, angka(x.uji.auc), persen(x.uji.akurasi), angka(x.uji.brier)];
     }), nama.indexOf(met.pemenang));
 
   tabel($("kelompok"), T.kelompok.kepala,

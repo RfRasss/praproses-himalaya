@@ -44,9 +44,10 @@ Two tokens are added in `style.css`: `--color-rule-2` (ink at 22%) and `--color-
 - Under reduced motion everything ends at once and the snow is hidden.
 
 ## Where the words live
-- `aplikasi/web/index.html`: page text, headings, form labels, the limits list
-- `aplikasi/web/teks.js`: every sentence JavaScript prints
-- `aplikasi/teks.py`: scenario names, warnings, error messages, season names
+- `aplikasi/web/teks.js`: every word on the page, in Indonesian and English side by side. The `html` part fills elements marked `data-t` in `index.html`; the rest is printed by JavaScript.
+- The server sends codes only, never sentences.
+- Voice: a calm, precise, formal explainer. Indonesian uses the standard register (no colloquial forms) and addresses the reader as "Anda"; English addresses the reader as "you". Short active sentences, one idea each. Sources in `catatan/riset-teks-dwibahasa.md`.
+- Language: `lang` on `<html>` follows the active language; the switch names each language in itself; the choice is stored in localStorage; numbers use `Intl` with `id-ID` or `en-US`.
 
 ## Exports
 `tokens.css` in this project. Tailwind, DTCG or shadcn blocks are added here on request, per `export-formats.md`.

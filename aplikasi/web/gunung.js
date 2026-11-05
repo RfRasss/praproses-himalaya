@@ -10,7 +10,7 @@ const Gunung = (() => {
   const Y_ATAS = 88, Y_BAWAH = 352, X = 92;
   const yDari = (m, tinggi) => Y_BAWAH - ((m - ALAS) / (tinggi - ALAS)) * (Y_BAWAH - Y_ATAS);
 
-  let svg, hero, foto, aktif = 0, daftar = [], p = 0, tinggi = 8850, penanda, progres, label;
+  let svg, hero, foto, aktif = 0, daftar = [], p = 0, tinggi = 8850, penanda, progres, label, sekarang = null;
 
   function acak(seed) {
     let a = seed >>> 0;
@@ -32,12 +32,15 @@ const Gunung = (() => {
     }
   }
 
+  const altFoto = (kode, pengganti) => (pengganti ? TEKS.gunung.altPengganti : TEKS.gunung.alt)(TEKS.gunung.foto[kode]);
+  const ketFoto = (id, q) => (FOTO[id] ? "" : TEKS.gunung.keterangan(TEKS.gunung.foto.umum, q.nama));
+
   function tukarFoto(kode, pengganti) {
     const berikut = foto[1 - aktif];
     const muat = new Image();
     muat.onload = () => {
       berikut.src = muat.src;
-      berikut.alt = (pengganti ? TEKS.gunung.altPengganti : TEKS.gunung.alt)(TEKS.gunung.foto[kode]);
+      berikut.alt = altFoto(kode, pengganti);
       berikut.classList.add("on");
       foto[aktif].classList.remove("on");
       aktif = 1 - aktif;
@@ -102,9 +105,17 @@ const Gunung = (() => {
       const q = daftar.find((d) => d.id === id);
       if (!q) return;
       const kode = FOTO[id] || "umum";
+      sekarang = q;
       tukarFoto(kode, !FOTO[id]);
-      document.getElementById("foto-ket").textContent = FOTO[id] ? "" : TEKS.gunung.keterangan(TEKS.gunung.foto.umum, q.nama);
+      document.getElementById("foto-ket").textContent = ketFoto(id, q);
       ukur(q);
+    },
+    // Dipanggil saat bahasa berganti: tulis ulang teks alat ukur, keterangan, dan alt foto.
+    segarkan() {
+      if (!sekarang) return;
+      document.getElementById("foto-ket").textContent = ketFoto(sekarang.id, sekarang);
+      foto[aktif].alt = altFoto(FOTO[sekarang.id] || "umum", !FOTO[sekarang.id]);
+      ukur(sekarang);
     },
     setPeluang(v) { p = v; letakkan(false); },
   };

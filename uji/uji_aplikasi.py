@@ -41,7 +41,7 @@ def main() -> int:
     o = c.get("/api/opsi").json()
     periksa("puncak, peran, negara, musim terisi", all(o[k] for k in ("puncak", "peran", "negara", "musim")))
     periksa("Everest ada di daftar", any(p["id"] == "EVER" for p in o["puncak"]))
-    periksa("musim punya id dan nama", all({"id", "nama"} <= set(m) for m in o["musim"]))
+    periksa("musim berupa id saja", set(o["musim"]) == {"Spring", "Autumn", "Winter", "Summer"})
 
     print("\n2. Prediksi")
     r = c.post("/api/prediksi", json=DASAR)
@@ -50,7 +50,7 @@ def main() -> int:
     periksa("peluang di antara 0 dan 1", 0 <= d["peluang"] <= 1)
     periksa("skenario terurut dari selisih terbesar",
             [abs(s["selisih"]) for s in d["skenario"]] == sorted((abs(s["selisih"]) for s in d["skenario"]), reverse=True))
-    periksa("skenario tidak mengulang kondisi sekarang", all(s["label"] != "Musim semi" for s in d["skenario"]))
+    periksa("skenario tidak mengulang kondisi sekarang", all(not (s["kode"] == "musim" and s["musim"] == "Spring") for s in d["skenario"]))
     tanpa = c.post("/api/prediksi", json={**DASAR, "oxygen": False}).json()["peluang"]
     periksa("tanpa oksigen peluang Everest turun jauh", tanpa < d["peluang"] - 0.3,
             f"{tanpa:.2f} lawan {d['peluang']:.2f}")

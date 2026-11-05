@@ -21,28 +21,41 @@ let tunda;
 function isiPilihan(select, daftar, pilih) {
   kosongkan(select);
   for (const d of daftar) {
-    const o = h("option", { value: d.value }, d.label);
+    const o = h("option", { value: d.value, ...(d.en ? { lang: "en" } : {}) }, d.label);
     if (d.value === pilih) o.selected = true;
     select.append(o);
   }
 }
 
 let daftarPuncak = [];
+let opsi = null;
+let hasilTerakhir = null;
 
+const labelPuncak = (p) => `${p.nama} (${ribuan(p.tinggi)} m)`;
+const labelSkenario = (s) => (s.kode === "musim" ? TEKS.hasil.skenario.musim(TEKS.musim[s.musim]) : TEKS.hasil.skenario[s.kode]);
+
+// Nama puncak dan musim ikut bahasa. Nilai dari data (negara, peran) tetap bahasa Inggris dan ditandai lang="en".
+function labelOpsi() {
+  if (!opsi) return;
+  const pilihan = $("peak_id");
+  for (const o of pilihan.options) o.textContent = labelPuncak(opsi.puncak.find((p) => p.id === o.value));
+  for (const m of opsi.musim) $("musim-" + m).nextElementSibling.textContent = TEKS.musim[m];
+}
 async function muatOpsi() {
   const r = await fetch("/api/opsi");
   if (!r.ok) throw new Error(TEKS.galat.opsi);
   const o = await r.json();
+  opsi = o;
   daftarPuncak = o.puncak.map((p) => ({ id: p.id, nama: p.nama, tinggi: p.tinggi }));
-  isiPilihan($("peak_id"), o.puncak.map((p) => ({ value: p.id, label: `${p.nama} (${p.tinggi.toLocaleString("id-ID")} m)` })), "EVER");
-  isiPilihan($("citizenship"), o.negara.map((n) => ({ value: n, label: n })), o.negara.includes("Japan") ? "Japan" : o.negara[0]);
-  isiPilihan($("role"), o.peran.map((n) => ({ value: n, label: n })), "Climber");
+  isiPilihan($("peak_id"), o.puncak.map((p) => ({ value: p.id, label: labelPuncak(p) })), "EVER");
+  isiPilihan($("citizenship"), o.negara.map((n) => ({ value: n, label: n, en: true })), o.negara.includes("Japan") ? "Japan" : o.negara[0]);
+  isiPilihan($("role"), o.peran.map((n) => ({ value: n, label: n, en: true })), "Climber");
   const wadah = $("musim");
   kosongkan(wadah);
   o.musim.forEach((m) => {
     wadah.append(
-      h("input", { type: "radio", name: "season", id: "musim-" + m.id, value: m.id, ...(m.id === "Spring" ? { checked: "" } : {}) }),
-      h("label", { for: "musim-" + m.id }, m.nama),
+      h("input", { type: "radio", name: "season", id: "musim-" + m, value: m, ...(m === "Spring" ? { checked: "" } : {}) }),
+      h("label", { for: "musim-" + m }, TEKS.musim[m]),
     );
   });
 }
@@ -92,11 +105,12 @@ async function hitung() {
       const j = await r.json().catch(() => ({}));
       // Galat validasi Pydantic berupa daftar; loc terakhir adalah nama kolomnya.
       const kolom = Array.isArray(j.detail) && j.detail[0]?.loc?.at(-1);
-      throw new Error(typeof j.detail === "string" ? j.detail : kolom ? TEKS.galat.isian(kolom) : TEKS.galat.server(r.status));
+      const tidakDikenal = j.detail?.kode === "tidak_dikenal" && TEKS.galat.tidakDikenal(j.detail.kolom);
+      throw new Error(tidakDikenal || (kolom ? TEKS.galat.isian(kolom) : TEKS.galat.server(r.status)));
     }
     const data = await r.json();
     if (nomor !== permintaan) return; // sudah ada isian yang lebih baru
-    gambarHasil(data, m);
+    gambarHasil(data);
     keadaan("isi");
   } catch (e) {
     if (nomor === permintaan) keadaan("galat", e.message || TEKS.galat.prediksi);
@@ -104,7 +118,8 @@ async function hitung() {
 }
 
 /* ---------- hasil ---------- */
-function gambarHasil(d, m) {
+function gambarHasil(d) {
+  hasilTerakhir = d;
   naik(Math.round(d.peluang * 100));
   Gunung.setPeluang(d.peluang);
   const dari100 = Math.round(d.peluang * 100);
@@ -113,7 +128,7 @@ function gambarHasil(d, m) {
 
   const ul = $("peringatan");
   kosongkan(ul);
-  d.peringatan.forEach((t) => ul.append(h("li", {}, t)));
+  d.peringatan.forEach((kode) => ul.append(h("li", {}, TEKS.hasil.peringatan[kode])));
 
   gambarDimensi(d, metrikCache);
 
@@ -122,7 +137,7 @@ function gambarHasil(d, m) {
   d.skenario.forEach((s, i) => {
     const naikTurun = s.selisih >= 0 ? "sb sb--naik" : "sb sb--turun";
     const tr = h("tr", { tabindex: "0" },
-      h("th", { scope: "row" }, s.label),
+      h("th", { scope: "row" }, labelSkenario(s)),
       h("td", { class: "num" }, persen(s.peluang, 0)),
       h("td", { class: "num" }, poin(s.selisih)),
       h("td", { class: "sel", "aria-hidden": "true" }, h("span", { class: naikTurun, style: `--s:${Math.min(1, Math.abs(s.selisih) / 0.5).toFixed(2)}` })));
@@ -167,7 +182,7 @@ function gambarDimensi(d, met) {
   });
 
   d.skenario.forEach((s, i) => {
-    svg.append(h("line", { x1: X(s.peluang), x2: X(s.peluang), y1: Y - 10, y2: Y + 10, class: "ln--ink ln tik", "data-i": i }, h("title", {}, `${s.label}: ${persen(s.peluang, 0)}`)));
+    svg.append(h("line", { x1: X(s.peluang), x2: X(s.peluang), y1: Y - 10, y2: Y + 10, class: "ln--ink ln tik", "data-i": i }, h("title", {}, `${labelSkenario(s)}: ${persen(s.peluang, 0)}`)));
     svg.append(h("text", { x: X(s.peluang), y: Y - 38, class: "t t--ink tl", "text-anchor": "middle", "data-i": i }, persen(s.peluang, 0)));
   });
 
@@ -176,9 +191,31 @@ function gambarDimensi(d, met) {
   svg.append(h("text", { x: X(d.peluang), y: 14, class: "t--big t", "text-anchor": anchor }, persen(d.peluang, 0)));
 }
 
+/* ---------- bahasa ---------- */
+function bahasaAwal() {
+  try { const b = localStorage.getItem("bahasa"); if (SEMUA[b]) return b; } catch { /* penyimpanan tidak tersedia */ }
+  // Tanpa pilihan tersimpan, ikuti bahasa peramban dan jatuh ke Indonesia kalau tidak dikenal.
+  const peramban = (navigator.language || "").slice(0, 2).toLowerCase();
+  return SEMUA[peramban] ? peramban : "id";
+}
+
+function setBahasa(b) {
+  TEKS = SEMUA[b];
+  document.documentElement.lang = b;
+  try { localStorage.setItem("bahasa", b); } catch { /* penyimpanan tidak tersedia */ }
+  document.querySelectorAll("[data-bhs]").forEach((t) => t.setAttribute("aria-pressed", String(t.dataset.bhs === b)));
+  pasangTeks();
+  tampilkanTab();
+  labelOpsi();
+  Gunung.segarkan();
+  if (hasilTerakhir) gambarHasil(hasilTerakhir);
+  if (metrikCache) isiModel(metrikCache);
+}
+
 /* ---------- mulai ---------- */
 async function mulai() {
-  tampilkanTab();
+  document.querySelectorAll("[data-bhs]").forEach((t) => t.addEventListener("click", () => setBahasa(t.dataset.bhs)));
+  setBahasa(bahasaAwal());
   window.addEventListener("hashchange", tampilkanTab);
   try {
     const [, met] = await Promise.all([muatOpsi(), fetch("/api/model").then((r) => (r.ok ? r.json() : Promise.reject(new Error(TEKS.galat.metrik))))]);

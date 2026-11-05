@@ -78,8 +78,7 @@ aplikasi/
   main.py           rute API dan penyaji halaman web
   layanan.py        dari masukan formulir ke prediksi, skenario, peringatan
   katalog.py        pilihan formulir dari data
-  teks.py           kalimat dari server
-  web/              halaman: index.html, style.css, teks.js (kalimat),
+  web/              halaman: index.html, style.css, teks.js (semua kata, dua bahasa),
                     util.js (alat kecil), app.js (layar Prediksi),
                     grafik.js (layar Model), gunung.js (foto dan alat ukur)
 jalankan.py         skrip utama
@@ -173,16 +172,22 @@ ke 0,701. Kami belum memeriksa apakah kolom itu dicatat sebelum atau sesudah
 hasil pendakian, jadi sebagian sinyalnya bisa jadi bocoran. Batasan lengkap ada
 di halaman Model dan di `catatan/adr-aplikasi.md`.
 
-## Mengubah teks
+## Mengubah teks dan bahasa
 
-Semua kata ada di tiga tempat, dan tidak ada yang tersebar di tempat lain.
+Halaman punya dua bahasa, Indonesia dan Inggris, dengan tombol di pojok kanan
+atas. Pilihannya tersimpan di peramban. Tanpa pilihan tersimpan, halaman
+mengikuti bahasa peramban dan jatuh ke Indonesia.
 
-- `aplikasi/web/index.html`: judul, label formulir, catatan kecil, daftar batasan.
-- `aplikasi/web/teks.js`: kalimat yang dicetak JavaScript (hasil, kartu model, grafik, nama fitur, keterangan foto).
-- `aplikasi/teks.py`: nama skenario, peringatan, pesan galat, dan nama musim.
+Semua kata ada di satu berkas, `aplikasi/web/teks.js`. Bahasa Indonesia dan
+Inggris ditulis berdampingan dengan susunan yang sama, jadi kalau Anda mengubah
+satu kalimat, ubah juga padanannya di bahasa lain. Bagian `html` dipasang ke
+elemen bertanda `data-t` di `index.html`, dan bagian lain dicetak langsung oleh
+JavaScript. Server tidak mengirim kalimat sama sekali, hanya kode seperti
+`oksigen_tanpa`, yang diterjemahkan di `teks.js`.
 
-Setelah mengubah `teks.py`, mulai ulang server. Dua yang lain cukup dimuat ulang
-di browser. Sistem tampilannya terkunci di `design.md`.
+Cukup muat ulang halaman setelah mengubah `teks.js`. Dasar pemilihan gaya
+bahasa dan cara kerja tombol bahasa ada di `catatan/riset-teks-dwibahasa.md`.
+Sistem tampilannya terkunci di `design.md`.
 
 ## Foto
 

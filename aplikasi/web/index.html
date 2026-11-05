@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Peluang Puncak Himalaya</title>
-<meta name="description" content="Model pembelajaran mesin yang menaksir peluang seorang pendaki mencapai puncak Himalaya dari rencana ekspedisinya.">
+<meta name="description" content="" data-tm="html.deskripsi">
 <link rel="icon" href="data:,">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,30 +19,36 @@
 <body>
 <header class="bar">
   <div class="container bar__in">
-    <a class="wordmark" href="#prediksi"><svg class="logo" viewBox="0 0 26 20" aria-hidden="true"><path d="M1 18 L9 4 L13 11 L16 7 L25 18 Z" class="logo__p"/></svg>Puncak Himalaya</a>
-    <nav aria-label="Halaman">
-      <a href="#prediksi" data-tab="prediksi">Prediksi</a>
-      <a href="#model" data-tab="model">Model</a>
-    </nav>
+    <a class="wordmark" href="#prediksi"><svg class="logo" viewBox="0 0 26 20" aria-hidden="true"><path d="M1 18 L9 4 L13 11 L16 7 L25 18 Z" class="logo__p"/></svg><span data-t="html.merek">Puncak Himalaya</span></a>
+    <div class="bar__kanan">
+      <nav data-ta="html.navLabel" aria-label="Halaman">
+        <a href="#prediksi" data-tab="prediksi" data-t="html.tab.prediksi">Prediksi</a>
+        <a href="#model" data-tab="model" data-t="html.tab.model">Kartu model</a>
+      </nav>
+      <div class="bhs" role="group" data-ta="html.bahasaLabel" aria-label="Bahasa">
+        <button type="button" data-bhs="id" lang="id" aria-pressed="true"><span class="bhs__penuh">Indonesia</span><span class="bhs__singkat" aria-hidden="true">ID</span></button>
+        <button type="button" data-bhs="en" lang="en" aria-pressed="false"><span class="bhs__penuh">English</span><span class="bhs__singkat" aria-hidden="true">EN</span></button>
+      </div>
+    </div>
   </div>
 </header>
 
-<noscript><p class="container note">Halaman ini butuh JavaScript untuk menghitung prediksi dan menggambar grafik.</p></noscript>
+<noscript><p class="container note">Halaman ini memerlukan JavaScript untuk menghitung prediksi dan menggambar grafik. This page needs JavaScript to calculate predictions and draw the charts.</p></noscript>
 
 <main class="container">
   <section id="prediksi" class="view" aria-labelledby="h-prediksi">
     <div class="hero">
-      <div class="hero__foto" aria-hidden="false">
-        <img class="foto foto--a on" src="foto/umum.jpg" alt="Puncak Himalaya yang diterangi matahari di bawah langit biru tua" width="1920" height="1352" fetchpriority="high">
+      <div class="hero__foto">
+        <img class="foto foto--a on" src="foto/umum.jpg" alt="" width="1920" height="1352" fetchpriority="high">
         <img class="foto foto--b" src="foto/umum.jpg" alt="" width="1920" height="1352">
       </div>
       <svg id="salju" class="hero__salju" aria-hidden="true" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice"></svg>
       <div class="hero__txt">
-        <h1 id="h-prediksi">Seberapa besar peluang Anda sampai puncak?</h1>
-        <p class="lead">Pilih puncak dan isi rencana Anda. Pendaki di alat ukur sebelah kanan naik sejauh peluangnya. Angkanya dihitung dari 76.519 catatan pendakian Himalaya.</p>
+        <h1 id="h-prediksi" data-t="html.hero.judul"></h1>
+        <p class="lead" data-t="html.hero.pengantar"></p>
       </div>
       <div class="hero__ukur">
-        <svg id="gunung" viewBox="0 0 170 400" role="img" aria-label="Alat ukur ketinggian. Pendaki naik sejauh peluang prediksi."></svg>
+        <svg id="gunung" viewBox="0 0 170 400" role="img" data-ta="html.hero.alat"></svg>
       </div>
       <p class="hero__ket" id="foto-ket"></p>
     </div>
@@ -50,72 +56,73 @@
     <div class="split">
       <form id="form" class="block" autocomplete="off" novalidate>
         <div class="cell cell--wide">
-          <label for="peak_id">Puncak</label>
+          <label for="peak_id" data-t="html.form.puncak"></label>
           <select id="peak_id" name="peak_id" required></select>
         </div>
         <div class="cell cell--wide seg" role="group" aria-labelledby="l-musim">
-          <span class="lbl" id="l-musim">Musim</span>
+          <span class="lbl" id="l-musim" data-t="html.form.musim"></span>
           <span id="musim"></span>
         </div>
         <div class="cell">
-          <label for="age">Usia</label>
+          <label for="age" data-t="html.form.usia"></label>
           <input id="age" name="age" type="number" inputmode="numeric" min="10" max="90" value="35" required>
-          <input type="range" class="slider" data-untuk="age" min="10" max="90" value="35" aria-label="Usia (geser)">
+          <input type="range" class="slider" data-untuk="age" data-label="html.form.usia" min="10" max="90" value="35">
         </div>
         <div class="cell seg" role="group" aria-labelledby="l-sex">
-          <span class="lbl" id="l-sex">Jenis kelamin</span>
-          <input type="radio" name="sex" id="sex-M" value="M" checked><label for="sex-M">Laki-laki</label>
-          <input type="radio" name="sex" id="sex-F" value="F"><label for="sex-F">Perempuan</label>
+          <span class="lbl" id="l-sex" data-t="html.form.kelamin"></span>
+          <input type="radio" name="sex" id="sex-M" value="M" checked><label for="sex-M" data-t="html.form.laki"></label>
+          <input type="radio" name="sex" id="sex-F" value="F"><label for="sex-F" data-t="html.form.perempuan"></label>
         </div>
         <div class="cell">
-          <label for="citizenship">Kewarganegaraan</label>
+          <label for="citizenship" data-t="html.form.negara"></label>
           <select id="citizenship" name="citizenship" required></select>
         </div>
         <div class="cell">
-          <label for="role">Peran dalam ekspedisi</label>
+          <label for="role" data-t="html.form.peran"></label>
           <select id="role" name="role" required></select>
         </div>
         <div class="cell">
-          <label for="team_size">Anggota tim</label>
+          <label for="team_size" data-t="html.form.tim"></label>
           <input id="team_size" name="team_size" type="number" inputmode="numeric" min="1" max="99" value="9" required>
-          <input type="range" class="slider" data-untuk="team_size" min="1" max="99" value="9" aria-label="Anggota tim (geser)">
+          <input type="range" class="slider" data-untuk="team_size" data-label="html.form.tim" min="1" max="99" value="9">
         </div>
         <div class="cell">
-          <label for="hired_staff">Staf bayaran</label>
+          <label for="hired_staff" data-t="html.form.staf"></label>
           <input id="hired_staff" name="hired_staff" type="number" inputmode="numeric" min="0" max="99" value="3" required>
-          <input type="range" class="slider" data-untuk="hired_staff" min="0" max="99" value="3" aria-label="Staf bayaran (geser)">
+          <input type="range" class="slider" data-untuk="hired_staff" data-label="html.form.staf" min="0" max="99" value="3">
         </div>
         <div class="cell cell--wide checks">
-          <label class="check"><input type="checkbox" name="oxygen" checked> Memakai oksigen tambahan</label>
-          <label class="check"><input type="checkbox" name="hired"> Saya staf bayaran</label>
-          <label class="check"><input type="checkbox" name="solo"> Pendakian solo</label>
+          <label class="check"><input type="checkbox" name="oxygen" checked> <span data-t="html.form.oksigen"></span></label>
+          <label class="check"><input type="checkbox" name="hired"> <span data-t="html.form.staf_saya"></span></label>
+          <label class="check"><input type="checkbox" name="solo"> <span data-t="html.form.solo"></span></label>
         </div>
-        <p class="cell cell--wide fine">Model memakai 2019 sebagai tahun rencana, karena itu tahun terakhir di data. Rekam jejak agen trekking tidak ditanyakan, jadi model mengisinya dengan nilai tengah dari data latih.</p>
+        <p class="cell cell--wide fine" data-t="html.form.catatan"></p>
       </form>
 
       <section class="hasil" aria-live="polite" aria-labelledby="h-hasil">
-        <h2 id="h-hasil">Peluang sampai puncak</h2>
+        <h2 id="h-hasil" data-t="html.hasil.judul"></h2>
         <div id="hasil" data-state="memuat">
           <div class="skel" aria-hidden="true"></div>
-          <p class="state state--memuat">Sedang menghitung.</p>
+          <p class="state state--memuat" data-t="html.hasil.memuat"></p>
           <div class="state state--galat" role="alert">
-            <p id="galat-teks">Prediksi gagal. Coba sekali lagi.</p>
-            <button class="btn btn--quiet" type="button" id="ulangi">Coba lagi</button>
+            <p id="galat-teks"></p>
+            <button class="btn btn--quiet" type="button" id="ulangi" data-t="html.hasil.ulangi"></button>
           </div>
           <div class="state state--isi">
             <p class="angka"><span id="persen" class="figure">0</span><span class="satuan">%</span></p>
             <p id="kalimat" class="lead"></p>
             <ul id="peringatan" class="peringatan"></ul>
             <figure class="fig">
-              <svg id="dim" role="img" aria-label="Skala peluang dari 0 sampai 100 persen"></svg>
-              <figcaption class="fine">Tanda tebal menunjukkan prediksi Anda, tanda kecil menunjukkan skenario di tabel. Dua garis putus-putus adalah rata-rata keberhasilan di data latih dan data uji.</figcaption>
+              <svg id="dim" role="img" data-ta="html.hasil.skala"></svg>
+              <figcaption class="fine" data-t="html.hasil.keterangan"></figcaption>
             </figure>
-            <h3>Ganti satu keputusan, lihat akibatnya</h3>
+            <h3 data-t="html.hasil.skenario"></h3>
+            <p class="fine" data-t="html.hasil.skenarioPengantar"></p>
             <table class="register">
-              <thead><tr><th scope="col">Skenario</th><th scope="col" class="num">Peluang</th><th scope="col" class="num">Selisih</th></tr></thead>
+              <thead><tr><th scope="col" data-t="html.hasil.kepala.skenario"></th><th scope="col" class="num" data-t="html.hasil.kepala.peluang"></th><th scope="col" class="num" data-t="html.hasil.kepala.selisih"></th></tr></thead>
               <tbody id="skenario"></tbody>
             </table>
-            <p class="fine">Selisih ini hanya membandingkan prediksi model, bukan membuktikan sebab dan akibat. Oksigen paling berpengaruh di data. Kami belum memeriksa apakah kolom itu dicatat sebelum atau sesudah hasil pendakian diketahui.</p>
+            <p class="fine" data-t="html.hasil.catatan"></p>
           </div>
         </div>
       </section>
@@ -123,62 +130,63 @@
   </section>
 
   <section id="model" class="view" aria-labelledby="h-model">
-    <h1 id="h-model">Seberapa jujur angka ini?</h1>
-    <p class="lead" id="ringkas-model">Memuat angka model.</p>
+    <h1 id="h-model" data-t="html.model.judul"></h1>
+    <p class="lead" id="pengantar-model"></p>
+    <p class="lead" id="ringkas-model"></p>
 
     <div class="stats" id="stats"></div>
 
     <div class="grid2">
       <section aria-labelledby="h-banding">
-        <h2 id="h-banding">Tiga algoritma diadu</h2>
+        <h2 id="h-banding" data-t="html.model.banding"></h2>
         <table class="register" id="banding"></table>
-        <p class="fine">Pemenang dipilih lewat validasi silang di data latih, dan tiap ekspedisi selalu utuh di satu sisi. Data uji baru dipakai sekali di akhir.</p>
+        <p class="fine" data-t="html.model.bandingCatatan"></p>
       </section>
       <section aria-labelledby="h-kalibrasi">
-        <h2 id="h-kalibrasi">Apakah 70% benar-benar 70%?</h2>
-        <figure class="fig"><svg id="kalibrasi" role="img" aria-label="Diagram reliabilitas: peluang prediksi lawan kejadian nyata"></svg></figure>
+        <h2 id="h-kalibrasi" data-t="html.model.kalibrasi"></h2>
+        <figure class="fig"><svg id="kalibrasi" role="img" data-ta="html.model.kalibrasiAlat"></svg></figure>
         <p class="fine" id="kalibrasi-teks"></p>
       </section>
     </div>
 
     <section aria-labelledby="h-geser">
-      <h2 id="h-geser">Pendakian makin sering berhasil</h2>
-      <figure class="fig"><svg id="geser" role="img" aria-label="Tingkat keberhasilan per tahun sejak 1970"></svg></figure>
+      <h2 id="h-geser" data-t="html.model.geser"></h2>
+      <figure class="fig"><svg id="geser" role="img" data-ta="html.model.geserAlat"></svg></figure>
       <p class="fine" id="geser-teks"></p>
       <table class="register" id="tahun-uji"></table>
     </section>
 
     <div class="grid2">
       <section aria-labelledby="h-penting">
-        <h2 id="h-penting">Apa yang paling dipakai model</h2>
-        <figure class="fig"><svg id="penting" role="img" aria-label="Penurunan AUC saat tiap fitur diacak"></svg></figure>
-        <p class="fine">Cara membacanya: kolom diacak satu per satu, lalu dilihat seberapa turun AUC. Makin besar turunnya, makin model bergantung pada kolom itu. Kolom yang saling berkaitan bisa saling menutupi.</p>
+        <h2 id="h-penting" data-t="html.model.penting"></h2>
+        <figure class="fig"><svg id="penting" role="img" data-ta="html.model.pentingAlat"></svg></figure>
+        <p class="fine" data-t="html.model.pentingCatatan"></p>
       </section>
       <section aria-labelledby="h-kelompok">
-        <h2 id="h-kelompok">Hasil per jenis kelamin</h2>
+        <h2 id="h-kelompok" data-t="html.model.kelompok"></h2>
         <table class="register" id="kelompok"></table>
-        <p class="fine">Pendaki perempuan jauh lebih sedikit, jadi lihat kolom jumlah baris sebelum membandingkan. Kewarganegaraan tidak ditampilkan karena banyak negara hanya punya beberapa baris.</p>
+        <p class="fine" data-t="html.model.kelompokCatatan"></p>
       </section>
     </div>
 
     <section aria-labelledby="h-batas" class="batas">
-      <h2 id="h-batas">Batasan</h2>
+      <h2 id="h-batas" data-t="html.model.batas"></h2>
       <ul>
-        <li id="bt-oksigen">Oksigen mendominasi model.</li>
-        <li>Aplikasi ini untuk belajar pembelajaran mesin. Jangan memakainya untuk memutuskan berangkat atau tidak, dan jangan menganggapnya alat keselamatan.</li>
-        <li>Satu baris data adalah satu pendaki, jadi peluangnya milik pendaki itu, bukan milik seluruh ekspedisi.</li>
-        <li>Datanya berhenti di 2019, padahal situs resmi Himalayan Database sudah memuat musim yang lebih baru.</li>
-        <li>Tingkat keberhasilan jauh lebih tinggi di data uji daripada di data latih. Model tidak punya kolom tahun, jadi perubahan zaman hanya tertangkap lewat lama puncak sudah didaki.</li>
-        <li>Hanya puncak dengan 100 baris data atau lebih yang bisa dipilih. Rekam jejak agen tidak ditanyakan, jadi model mengisinya dengan nilai tengah.</li>
-        <li>Data latih dan data uji dibagi menurut tahun, dan validasi silang menjaga satu ekspedisi tetap utuh. Alasannya ada di catatan/keputusan-praproses.md.</li>
+        <li id="bt-oksigen"></li>
+        <li data-t="html.model.batasan.0"></li>
+        <li data-t="html.model.batasan.1"></li>
+        <li data-t="html.model.batasan.2"></li>
+        <li data-t="html.model.batasan.3"></li>
+        <li data-t="html.model.batasan.4"></li>
+        <li data-t="html.model.batasan.5"></li>
       </ul>
     </section>
   </section>
 </main>
 
 <footer class="container foot">
-  <p class="fine">Data: Himalayan Database lewat TidyTuesday, rilis 22 September 2020. Proyek akhir mata kuliah Pembelajaran Mesin.</p>
-  <p class="fine">Foto: <a href="https://commons.wikimedia.org/wiki/File:Everest,_Nuptse,_Khumbu_Glacier,_Nepal,_Himalayas.jpg">Everest, Vyacheslav Argenberg</a> (CC BY 4.0), <a href="https://commons.wikimedia.org/wiki/File:Kala_Patthar-38-Everest-Lhotse-Nuptse-2007-gje.jpg">Lhotse, Gerd Eichmann</a> (CC BY-SA 4.0), <a href="https://commons.wikimedia.org/wiki/File:Ama_Dablam,_Nepal.jpg">Ama Dablam, Vyacheslav Argenberg</a> (CC BY 4.0), <a href="https://commons.wikimedia.org/wiki/File:Cho_Oyu_-_North_face.jpg">Cho Oyu, Steve Hicks</a> (CC BY 2.0), <a href="https://commons.wikimedia.org/wiki/File:Makalu_and_Chamlang.jpg">Makalu, Craig Taylor</a> (CC BY-SA 2.0), <a href="https://commons.wikimedia.org/wiki/File:Pumori,_Nepal,_Asia.jpg">Pumori, Vyacheslav Argenberg</a> (CC BY 4.0). Wikimedia Commons.</p>
+  <p class="fine" data-t="html.kaki.data"></p>
+  <p class="fine"><span data-t="html.kaki.foto"></span> <a href="https://commons.wikimedia.org/wiki/File:Everest,_Nuptse,_Khumbu_Glacier,_Nepal,_Himalayas.jpg">Everest, Vyacheslav Argenberg</a> (CC BY 4.0), <a href="https://commons.wikimedia.org/wiki/File:Kala_Patthar-38-Everest-Lhotse-Nuptse-2007-gje.jpg">Lhotse, Gerd Eichmann</a> (CC BY-SA 4.0), <a href="https://commons.wikimedia.org/wiki/File:Ama_Dablam,_Nepal.jpg">Ama Dablam, Vyacheslav Argenberg</a> (CC BY 4.0), <a href="https://commons.wikimedia.org/wiki/File:Cho_Oyu_-_North_face.jpg">Cho Oyu, Steve Hicks</a> (CC BY 2.0), <a href="https://commons.wikimedia.org/wiki/File:Makalu_and_Chamlang.jpg">Makalu, Craig Taylor</a> (CC BY-SA 2.0), <a href="https://commons.wikimedia.org/wiki/File:Pumori,_Nepal,_Asia.jpg">Pumori, Vyacheslav Argenberg</a> (CC BY 4.0). <span data-t="html.kaki.sumber"></span></p>
 </footer>
 </body>
 </html>

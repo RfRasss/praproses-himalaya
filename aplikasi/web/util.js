@@ -15,13 +15,24 @@ function h(tag, attrs = {}, ...anak) {
 const kosongkan = (e) => e.replaceChildren();
 const kurangGerak = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-const ribuan = (n) => n.toLocaleString("id-ID");
-const persen = (v, d = 1) => (v * 100).toLocaleString("id-ID", { minimumFractionDigits: d, maximumFractionDigits: d }) + "%";
-const angka = (v, d = 3) => v.toLocaleString("id-ID", { minimumFractionDigits: d, maximumFractionDigits: d });
+const ribuan = (n) => n.toLocaleString(TEKS.lokal);
+const persen = (v, d = 1) => (v * 100).toLocaleString(TEKS.lokal, { minimumFractionDigits: d, maximumFractionDigits: d }) + "%";
+const angka = (v, d = 3) => v.toLocaleString(TEKS.lokal, { minimumFractionDigits: d, maximumFractionDigits: d });
 const poin = (v) => {
   const r = Math.round(v * 100);
   return (r > 0 ? "+" : r < 0 ? "-" : "") + Math.abs(r) + " " + TEKS.hasil.poin;
 };
+
+// Ambil nilai dari TEKS lewat jalur bertitik, misalnya "html.hero.judul".
+const ambil = (jalur) => jalur.split(".").reduce((o, k) => o?.[k], TEKS);
+
+// Pasang teks bahasa yang aktif ke semua elemen bertanda data-t (isi), data-ta (aria-label), data-tm (meta).
+function pasangTeks() {
+  document.querySelectorAll("[data-t]").forEach((e) => { const v = ambil(e.dataset.t); if (typeof v === "string") e.textContent = v; });
+  document.querySelectorAll("[data-ta]").forEach((e) => e.setAttribute("aria-label", ambil(e.dataset.ta)));
+  document.querySelectorAll("[data-tm]").forEach((e) => e.setAttribute("content", ambil(e.dataset.tm)));
+  document.querySelectorAll(".slider").forEach((s) => s.setAttribute("aria-label", `${ambil(s.dataset.label)} ${TEKS.html.form.geser}`));
+}
 
 function skala(svg, lebar, tinggi) {
   kosongkan(svg);
