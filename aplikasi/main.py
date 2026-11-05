@@ -69,7 +69,16 @@ def model():
 
 @app.get("/")
 def beranda():
-    return FileResponse(WEB / "index.html")
+    return FileResponse(WEB / "index.html", headers={"Cache-Control": "no-cache"})
 
 
-app.mount("/", StaticFiles(directory=WEB), name="web")
+class StatisTanpaSimpan(StaticFiles):
+    """Berkas statis selalu divalidasi ulang, supaya browser tidak memakai CSS lama."""
+
+    async def get_response(self, path, scope):
+        r = await super().get_response(path, scope)
+        r.headers["Cache-Control"] = "no-cache"
+        return r
+
+
+app.mount("/", StatisTanpaSimpan(directory=WEB), name="web")

@@ -8,14 +8,15 @@
 <link rel="icon" href="data:,">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<script src="gunung.js" defer></script>
 <script src="app.js" defer></script>
 </head>
 <body>
 <header class="bar">
   <div class="container bar__in">
-    <a class="wordmark" href="#prediksi">Puncak Himalaya</a>
+    <a class="wordmark" href="#prediksi"><svg class="logo" viewBox="0 0 26 20" aria-hidden="true"><path d="M1 18 L9 4 L13 11 L16 7 L25 18 Z" class="logo__p"/></svg>Puncak Himalaya</a>
     <nav aria-label="Halaman">
       <a href="#prediksi" data-tab="prediksi">Prediksi</a>
       <a href="#model" data-tab="model">Model</a>
@@ -27,8 +28,21 @@
 
 <main class="container">
   <section id="prediksi" class="view" aria-labelledby="h-prediksi">
-    <h1 id="h-prediksi">Rencana ekspedisi Anda</h1>
-    <p class="lead">Isi rencananya. Model menaksir peluang satu pendaki dengan rencana ini mencapai puncak, lalu menunjukkan apa yang berubah kalau satu keputusan diganti.</p>
+    <div class="hero">
+      <div class="hero__foto" aria-hidden="false">
+        <img class="foto foto--a on" src="foto/umum.jpg" alt="Puncak Himalaya yang diterangi matahari di bawah langit biru tua" width="1920" height="1352" fetchpriority="high">
+        <img class="foto foto--b" src="foto/umum.jpg" alt="" width="1920" height="1352">
+      </div>
+      <svg id="salju" class="hero__salju" aria-hidden="true" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice"></svg>
+      <div class="hero__txt">
+        <h1 id="h-prediksi">Seberapa besar peluang Anda sampai puncak?</h1>
+        <p class="lead">Pilih puncak, susun rencana, lalu lihat pendaki naik. Angkanya dihitung dari 76.519 catatan pendakian Himalaya.</p>
+      </div>
+      <div class="hero__ukur">
+        <svg id="gunung" viewBox="0 0 170 400" role="img" aria-label="Alat ukur ketinggian. Pendaki naik sejauh peluang prediksi."></svg>
+      </div>
+      <p class="hero__ket" id="foto-ket"></p>
+    </div>
 
     <div class="split">
       <form id="form" class="block" autocomplete="off" novalidate>
@@ -43,6 +57,7 @@
         <div class="cell">
           <label for="age">Usia</label>
           <input id="age" name="age" type="number" inputmode="numeric" min="10" max="90" value="35" required>
+          <input type="range" class="slider" data-untuk="age" min="10" max="90" value="35" aria-label="Usia (geser)">
         </div>
         <div class="cell seg" role="group" aria-labelledby="l-sex">
           <span class="lbl" id="l-sex">Jenis kelamin</span>
@@ -60,10 +75,12 @@
         <div class="cell">
           <label for="team_size">Anggota tim</label>
           <input id="team_size" name="team_size" type="number" inputmode="numeric" min="1" max="99" value="9" required>
+          <input type="range" class="slider" data-untuk="team_size" min="1" max="99" value="9" aria-label="Anggota tim (geser)">
         </div>
         <div class="cell">
           <label for="hired_staff">Staf bayaran</label>
           <input id="hired_staff" name="hired_staff" type="number" inputmode="numeric" min="0" max="99" value="3" required>
+          <input type="range" class="slider" data-untuk="hired_staff" min="0" max="99" value="3" aria-label="Staf bayaran (geser)">
         </div>
         <div class="cell cell--wide checks">
           <label class="check"><input type="checkbox" name="oxygen" checked> Memakai oksigen tambahan</label>
@@ -74,7 +91,7 @@
       </form>
 
       <section class="hasil" aria-live="polite" aria-labelledby="h-hasil">
-        <h2 id="h-hasil">Peluang mencapai puncak</h2>
+        <h2 id="h-hasil">Peluang sampai puncak</h2>
         <div id="hasil" data-state="memuat">
           <div class="skel" aria-hidden="true"></div>
           <p class="state state--memuat">Menghitung.</p>
@@ -90,7 +107,7 @@
               <svg id="dim" role="img" aria-label="Skala peluang dari 0 sampai 100 persen"></svg>
               <figcaption class="fine">Tanda besar adalah prediksi Anda. Tanda kecil adalah skenario di tabel. Garis putus-putus adalah tingkat keberhasilan rata-rata di data.</figcaption>
             </figure>
-            <h3>Kalau satu keputusan diganti</h3>
+            <h3>Ganti satu keputusan, lihat akibatnya</h3>
             <table class="register">
               <thead><tr><th scope="col">Skenario</th><th scope="col" class="num">Peluang</th><th scope="col" class="num">Selisih</th></tr></thead>
               <tbody id="skenario"></tbody>
@@ -103,7 +120,7 @@
   </section>
 
   <section id="model" class="view" aria-labelledby="h-model">
-    <h1 id="h-model">Kartu model</h1>
+    <h1 id="h-model">Seberapa jujur angka ini?</h1>
     <p class="lead" id="ringkas-model">Memuat metrik.</p>
 
     <div class="stats" id="stats"></div>
@@ -158,6 +175,7 @@
 
 <footer class="container foot">
   <p class="fine">Data: Himalayan Database lewat TidyTuesday, rilis 22 September 2020. Proyek akhir mata kuliah Pembelajaran Mesin.</p>
+  <p class="fine">Foto: <a href="https://commons.wikimedia.org/wiki/File:Everest,_Nuptse,_Khumbu_Glacier,_Nepal,_Himalayas.jpg">Everest, Vyacheslav Argenberg</a> (CC BY 4.0), <a href="https://commons.wikimedia.org/wiki/File:Kala_Patthar-38-Everest-Lhotse-Nuptse-2007-gje.jpg">Lhotse, Gerd Eichmann</a> (CC BY-SA 4.0), <a href="https://commons.wikimedia.org/wiki/File:Ama_Dablam,_Nepal.jpg">Ama Dablam, Vyacheslav Argenberg</a> (CC BY 4.0), <a href="https://commons.wikimedia.org/wiki/File:Cho_Oyu_-_North_face.jpg">Cho Oyu, Steve Hicks</a> (CC BY 2.0), <a href="https://commons.wikimedia.org/wiki/File:Makalu_and_Chamlang.jpg">Makalu, Craig Taylor</a> (CC BY-SA 2.0), <a href="https://commons.wikimedia.org/wiki/File:Pumori,_Nepal,_Asia.jpg">Pumori, Vyacheslav Argenberg</a> (CC BY 4.0). Wikimedia Commons.</p>
 </footer>
 </body>
 </html>

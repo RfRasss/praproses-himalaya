@@ -37,7 +37,7 @@ const poin = (v) => {
 
 // Pembangun elemen. Teks selalu lewat textContent, jadi data dari API tidak bisa menyuntik HTML.
 function h(tag, attrs = {}, ...anak) {
-  const ns = ["svg", "g", "line", "rect", "text", "polyline", "title"].includes(tag);
+  const ns = ["svg", "g", "line", "rect", "text", "polyline", "title", "path", "polygon", "defs", "pattern", "clipPath"].includes(tag);
   const e = ns ? document.createElementNS(SVGNS, tag) : document.createElement(tag);
   for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
   for (const a of anak.flat()) if (a != null) e.append(a);
@@ -70,10 +70,13 @@ function isiPilihan(select, daftar, pilih) {
   }
 }
 
+let daftarPuncak = [];
+
 async function muatOpsi() {
   const r = await fetch("/api/opsi");
   if (!r.ok) throw new Error("Daftar pilihan tidak bisa dimuat.");
   const o = await r.json();
+  daftarPuncak = o.puncak.map((p) => ({ id: p.id, nama: p.nama, tinggi: p.tinggi }));
   isiPilihan($("peak_id"), o.puncak.map((p) => ({ value: p.id, label: `${p.nama} (${p.tinggi.toLocaleString("id-ID")} m)` })), "EVER");
   isiPilihan($("citizenship"), o.negara.map((n) => ({ value: n, label: n })), o.negara.includes("Japan") ? "Japan" : o.negara[0]);
   isiPilihan($("role"), o.peran.map((n) => ({ value: n, label: n })), "Climber");
@@ -143,9 +146,11 @@ async function hitung() {
 
 /* ---------- hasil ---------- */
 function gambarHasil(d, m) {
-  $("persen").textContent = (d.peluang * 100).toLocaleString("id-ID", { maximumFractionDigits: 0 });
+  naik(Math.round(d.peluang * 100));
+  Gunung.setPeluang(d.peluang);
   const dari100 = Math.round(d.peluang * 100);
-  $("kalimat").textContent = `Dari 100 pendaki dengan rencana seperti ini, sekitar ${dari100} diperkirakan mencapai puncak.`;
+  const banding = metrikCache ? (d.peluang > metrikCache.berhasil_uji ? "di atas" : "di bawah") + ` rata-rata data uji (${persen(metrikCache.berhasil_uji)})` : "";
+  $("kalimat").textContent = `Dari 100 pendaki dengan rencana seperti ini, sekitar ${dari100} diperkirakan mencapai puncak, ${banding}.`;
 
   const ul = $("peringatan");
   kosongkan(ul);
@@ -155,9 +160,32 @@ function gambarHasil(d, m) {
 
   const tb = $("skenario");
   kosongkan(tb);
-  d.skenario.forEach((s) =>
-    tb.append(h("tr", {}, h("th", { scope: "row" }, s.label), h("td", { class: "num" }, persen(s.peluang, 0)), h("td", { class: "num" }, poin(s.selisih)))),
-  );
+  d.skenario.forEach((s, i) => {
+    const naikTurun = s.selisih >= 0 ? "sb sb--naik" : "sb sb--turun";
+    const tr = h("tr", { tabindex: "0" },
+      h("th", { scope: "row" }, s.label),
+      h("td", { class: "num" }, persen(s.peluang, 0)),
+      h("td", { class: "num" }, poin(s.selisih)),
+      h("td", { class: "sel", "aria-hidden": "true" }, h("span", { class: naikTurun, style: `--s:${Math.min(1, Math.abs(s.selisih) / 0.5).toFixed(2)}` })));
+    const sorot = (nyala) => document.querySelectorAll(`#dim [data-i="${i}"]`).forEach((e) => e.classList.toggle("on", nyala));
+    for (const [ev, nyala] of [["mouseenter", true], ["focus", true], ["mouseleave", false], ["blur", false]]) tr.addEventListener(ev, () => sorot(nyala));
+    tb.append(tr);
+  });
+}
+
+// Angka persen naik pelan dari nilai sebelumnya, kecuali gerak dikurangi.
+let tampil = 0, naikId = 0;
+function naik(ke) {
+  const el = $("persen"), id = ++naikId;
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) { tampil = ke; el.textContent = ke; return; }
+  const dari = tampil, t0 = performance.now();
+  (function langkah(t) {
+    if (id !== naikId) return;
+    const k = Math.min(1, (t - t0) / 650);
+    tampil = dari + (ke - dari) * (1 - (1 - k) ** 3);
+    el.textContent = Math.round(tampil);
+    if (k < 1) requestAnimationFrame(langkah);
+  })(t0);
 }
 
 // Tanda ukur: skala 0 sampai 100 persen, prediksi sebagai tanda besar, skenario sebagai tanda kecil.
@@ -181,9 +209,10 @@ function gambarDimensi(d, met) {
     });
   }
 
-  d.skenario.forEach((s) =>
-    svg.append(h("line", { x1: X(s.peluang), x2: X(s.peluang), y1: Y - 10, y2: Y + 10, class: "ln--ink ln" }, h("title", {}, `${s.label}: ${persen(s.peluang, 0)}`))),
-  );
+  d.skenario.forEach((s, i) => {
+    svg.append(h("line", { x1: X(s.peluang), x2: X(s.peluang), y1: Y - 10, y2: Y + 10, class: "ln--ink ln tik", "data-i": i }, h("title", {}, `${s.label}: ${persen(s.peluang, 0)}`)));
+    svg.append(h("text", { x: X(s.peluang), y: Y - 38, class: "t t--ink tl", "text-anchor": "middle", "data-i": i }, persen(s.peluang, 0)));
+  });
 
   svg.append(h("line", { x1: X(d.peluang), x2: X(d.peluang), y1: Y - 30, y2: Y + 14, class: "ln--heavy ln" }));
   const anchor = d.peluang < 0.06 ? "start" : d.peluang > 0.94 ? "end" : "middle";
@@ -219,7 +248,7 @@ function gambarKalibrasi(met) {
     svg.append(h("text", { x: M - 8, y: Y(p) + 4, class: "t", "text-anchor": "end" }, `${p * 100}`));
   });
   svg.append(h("line", { x1: X(0), x2: X(1), y1: Y(0), y2: Y(1), class: "ln--dash" }));
-  svg.append(h("polyline", { points: met.kalibrasi.map((k) => `${X(k.prediksi)},${Y(k.nyata)}`).join(" "), class: "ln--ink" }));
+  svg.append(h("polyline", { points: met.kalibrasi.map((k) => `${X(k.prediksi)},${Y(k.nyata)}`).join(" "), class: "ln--ink", pathLength: 1 }));
   met.kalibrasi.forEach((k) =>
     svg.append(h("rect", { x: X(k.prediksi) - 3, y: Y(k.nyata) - 3, width: 6, height: 6, class: "mk" }, h("title", {}, `Prediksi ${persen(k.prediksi, 0)}, nyata ${persen(k.nyata, 0)}`))),
   );
@@ -237,7 +266,7 @@ function gambarGeser(met) {
   const W = 900, H = 300, L = 44, R = 16, T = 24, B = 36;
   skala(svg, W, H);
   const th = met.per_tahun.map((t) => t.tahun);
-  const a = Math.min(...th), b = Math.max(...th);
+  const a = Math.min(...th), b2 = Math.max(...th), b = b2;
   const X = (t) => L + ((W - L - R) * (t - a)) / (b - a);
   const Y = (p) => H - B - (H - B - T) * p;
   [0, 0.25, 0.5, 0.75, 1].forEach((p) => {
@@ -249,11 +278,30 @@ function gambarGeser(met) {
   svg.append(h("line", { x1: X(potong), x2: X(potong), y1: T - 4, y2: H - B, class: "ln--dash" }));
   svg.append(h("text", { x: X(potong) - 6, y: T + 6, class: "t", "text-anchor": "end" }, "data latih"));
   svg.append(h("text", { x: X(potong) + 6, y: T + 6, class: "t" }, "data uji"));
-  svg.append(h("polyline", { points: met.per_tahun.map((t) => `${X(t.tahun)},${Y(t.berhasil)}`).join(" "), class: "ln--ink" }));
+  svg.append(h("polyline", { points: met.per_tahun.map((t) => `${X(t.tahun)},${Y(t.berhasil)}`).join(" "), class: "ln--ink", pathLength: 1 }));
   met.per_tahun_uji.forEach((t) =>
     svg.append(h("rect", { x: X(t.tahun) - 4, y: Y(t.prediksi) - 4, width: 8, height: 8, class: "mk--hollow" }, h("title", {}, `${t.tahun}: prediksi ${persen(t.prediksi)}, nyata ${persen(t.nyata)}`))),
   );
   svg.append(h("text", { x: L + 8, y: T + 6, class: "t" }, "garis: nyata, kotak kosong: prediksi"));
+
+  const baca = h("g", { class: "baca" },
+    h("line", { y1: T - 4, y2: H - B, class: "ln--ink ln" }),
+    h("text", { class: "t t--ink halo", y: T + 24 }));
+  svg.append(baca, h("rect", { x: L, y: T - 4, width: W - L - R, height: H - B - T + 4, class: "tangkap" }));
+  svg.lastChild.addEventListener("pointermove", (e) => {
+    const b = svg.getBoundingClientRect();
+    const x = ((e.clientX - b.left) / b.width) * W;
+    const t = Math.max(a, Math.min(b2, Math.round(a + ((x - L) / (W - L - R)) * (b2 - a))));
+    const d = met.per_tahun.find((r) => r.tahun === t);
+    if (!d) return;
+    baca.classList.add("on");
+    baca.firstChild.setAttribute("x1", X(t)); baca.firstChild.setAttribute("x2", X(t));
+    const teks = baca.lastChild;
+    teks.textContent = `${t}: ${persen(d.berhasil)} berhasil, ${d.n.toLocaleString("id-ID")} baris`;
+    teks.setAttribute("x", X(t) + (X(t) > W / 2 ? -8 : 8));
+    teks.setAttribute("text-anchor", X(t) > W / 2 ? "end" : "start");
+  });
+  svg.lastChild.addEventListener("pointerleave", () => baca.classList.remove("on"));
 
   const lebih = met.per_tahun_uji.filter((t) => t.prediksi > t.nyata).length;
   $("geser-teks").textContent =
@@ -326,6 +374,15 @@ async function mulai() {
     return;
   }
   const f = $("form");
+  Gunung.mulai($("gunung"), daftarPuncak);
+  Gunung.setPuncak(f.elements.peak_id.value);
+  f.elements.peak_id.addEventListener("change", (e) => Gunung.setPuncak(e.target.value));
+  // Penggeser dan kolom angka saling menyalin supaya keduanya selalu sama.
+  f.querySelectorAll(".slider").forEach((s) => {
+    const kolom = f.elements[s.dataset.untuk];
+    s.addEventListener("input", () => { kolom.value = s.value; });
+    kolom.addEventListener("input", () => { if (kolom.value !== "") s.value = kolom.value; });
+  });
   const jadwal = () => { clearTimeout(tunda); tunda = setTimeout(hitung, 250); };
   f.addEventListener("input", jadwal);
   f.addEventListener("change", jadwal);

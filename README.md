@@ -169,3 +169,11 @@ Satu catatan jujur: oksigen mendominasi. Tanpa dua kolom oksigen, AUC uji turun
 ke 0,701. Kami belum memeriksa apakah kolom itu dicatat sebelum atau sesudah
 hasil pendakian, jadi sebagian sinyalnya bisa jadi bocoran. Batasan lengkap ada
 di halaman Model dan di `catatan/adr-aplikasi.md`.
+
+## Foto
+
+Foto di halaman utama diambil dari Wikimedia Commons dan disimpan di
+`aplikasi/web/foto/`. Pembuat dan lisensinya ada di `aplikasi/web/foto/kredit.json`
+dan di kaki halaman web. Lima puncak punya foto sendiri (Everest, Lhotse, Ama
+Dablam, Cho Oyu, Makalu). Puncak lain memakai foto Pumori dan halaman
+menyebutnya terus terang.
