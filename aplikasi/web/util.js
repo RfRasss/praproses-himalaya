@@ -30,6 +30,7 @@ const ambil = (jalur) => jalur.split(".").reduce((o, k) => o?.[k], TEKS);
 function pasangTeks() {
   document.querySelectorAll("[data-t]").forEach((e) => { const v = ambil(e.dataset.t); if (typeof v === "string") e.textContent = v; });
   document.querySelectorAll("[data-ta]").forEach((e) => e.setAttribute("aria-label", ambil(e.dataset.ta)));
+  document.querySelectorAll("[data-talt]").forEach((e) => { e.alt = TEKS.gunung.alt(ambil(e.dataset.talt)); });
   document.querySelectorAll("[data-tm]").forEach((e) => e.setAttribute("content", ambil(e.dataset.tm)));
   document.querySelectorAll(".slider").forEach((s) => s.setAttribute("aria-label", `${ambil(s.dataset.label)} ${TEKS.html.form.geser}`));
 }

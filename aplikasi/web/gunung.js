@@ -22,8 +22,9 @@ const Gunung = (() => {
     };
   }
 
-  function salju() {
-    const r = acak(7), el = document.getElementById("salju");
+  // Salju jatuh di atas foto. Dipakai juga oleh halaman Model lewat Gunung.salju(el).
+  function salju(el = document.getElementById("salju")) {
+    const r = acak(7);
     for (let i = 0; i < 46; i++) {
       el.append(h("rect", {
         x: (r() * 1200).toFixed(0), y: 0, width: 3, height: 3, class: "serpih",
@@ -89,7 +90,11 @@ const Gunung = (() => {
     hero = el.closest(".hero");
     foto = [...hero.querySelectorAll(".foto")];
     salju();
-    // Foto bergeser sedikit mengikuti penunjuk, hanya kalau gerak diizinkan.
+    geser(hero);
+  }
+
+  // Foto bergeser sedikit mengikuti penunjuk, hanya kalau gerak diizinkan.
+  function geser(hero) {
     hero.addEventListener("pointermove", (e) => {
       if (kurangGerak()) return;
       const b = hero.getBoundingClientRect();
@@ -101,6 +106,8 @@ const Gunung = (() => {
 
   return {
     mulai,
+    salju,
+    geser,
     setPuncak(id) {
       const q = daftar.find((d) => d.id === id);
       if (!q) return;

@@ -227,6 +227,8 @@ async function mulai() {
   }
   const f = $("form");
   Gunung.mulai($("gunung"), daftarPuncak);
+  Gunung.salju($("salju-model"));
+  Gunung.geser($("salju-model").closest(".hero"));
   Gunung.setPuncak(f.elements.peak_id.value);
   f.elements.peak_id.addEventListener("change", (e) => Gunung.setPuncak(e.target.value));
   // Penggeser dan kolom angka saling menyalin supaya keduanya selalu sama.
