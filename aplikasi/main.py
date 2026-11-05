@@ -14,7 +14,7 @@ from .katalog import katalog
 WEB = Path(__file__).parent / "web"
 MUSIM = Literal["Spring", "Autumn", "Winter", "Summer"]
 
-app = FastAPI(title="Peluang puncak Himalaya")
+app = FastAPI(title="Zenith")
 
 
 class Masukan(BaseModel):

@@ -12,7 +12,7 @@ const SEMUA = {
 
     html: {
       deskripsi: "Model pembelajaran mesin yang menaksir peluang seorang pendaki mencapai puncak Himalaya dari rencana ekspedisinya.",
-      merek: "Puncak Himalaya",
+      merek: "Zenith",
       navLabel: "Halaman",
       bahasaLabel: "Bahasa",
       tab: { prediksi: "Prediksi", model: "Kartu model" },
@@ -86,7 +86,7 @@ const SEMUA = {
       },
     },
 
-    judul: { prediksi: "Prediksi", model: "Kartu model", akhiran: " - Peluang Puncak Himalaya" },
+    judul: { prediksi: "Prediksi", model: "Kartu model", akhiran: " - Zenith" },
     // Nama algoritma dari metrik.json. Kunci = nama di data, nilai = nama yang ditampilkan.
     algoritma: { "Regresi logistik": "Regresi logistik", "Random forest": "Random forest", "Gradient boosting": "Gradient boosting" },
     musim: { Spring: "Semi", Autumn: "Gugur", Winter: "Dingin", Summer: "Panas" },
@@ -205,7 +205,7 @@ const SEMUA = {
 
     html: {
       deskripsi: "A machine learning model that estimates a climber's chance of reaching a Himalayan summit from their expedition plan.",
-      merek: "Himalaya Summit",
+      merek: "Zenith",
       navLabel: "Pages",
       bahasaLabel: "Language",
       tab: { prediksi: "Prediction", model: "Model card" },
@@ -279,7 +279,7 @@ const SEMUA = {
       },
     },
 
-    judul: { prediksi: "Prediction", model: "Model card", akhiran: " - Himalaya Summit Odds" },
+    judul: { prediksi: "Prediction", model: "Model card", akhiran: " - Zenith" },
     algoritma: { "Regresi logistik": "Logistic regression", "Random forest": "Random forest", "Gradient boosting": "Gradient boosting" },
     musim: { Spring: "Spring", Autumn: "Autumn", Winter: "Winter", Summer: "Summer" },
 

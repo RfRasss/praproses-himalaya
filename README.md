@@ -8,7 +8,7 @@ Masalah yang diangkat kelompok: memprediksi apakah seorang pendaki berhasil
 mencapai puncak, berdasarkan rencana ekspedisinya. Jadi ini masalah klasifikasi
 biner.
 
-Repositori ini juga memuat model dan aplikasinya: pelatihan tiga algoritma,
+Repositori ini juga memuat model dan aplikasinya, yang bernama Zenith: pelatihan tiga algoritma,
 API FastAPI, dan halaman web tempat Anda mengisi rencana ekspedisi lalu melihat
 peluang suksesnya.
 
