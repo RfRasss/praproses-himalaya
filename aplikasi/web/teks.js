@@ -12,6 +12,7 @@ const TEKS = {
     metrik: "Metrik model tidak bisa dimuat.",
     prediksi: "Prediksi gagal. Coba sekali lagi.",
     server: (kode) => `Server menjawab dengan kode ${kode}.`,
+    isian: (kolom) => `Isian "${kolom}" ditolak server. Muat ulang halaman, lalu mulai ulang server kalau masih begini.`,
   },
 
   hasil: {

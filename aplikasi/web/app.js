@@ -90,7 +90,9 @@ async function hitung() {
     });
     if (!r.ok) {
       const j = await r.json().catch(() => ({}));
-      throw new Error(typeof j.detail === "string" ? j.detail : TEKS.galat.server(r.status));
+      // Galat validasi Pydantic berupa daftar; loc terakhir adalah nama kolomnya.
+      const kolom = Array.isArray(j.detail) && j.detail[0]?.loc?.at(-1);
+      throw new Error(typeof j.detail === "string" ? j.detail : kolom ? TEKS.galat.isian(kolom) : TEKS.galat.server(r.status));
     }
     const data = await r.json();
     if (nomor !== permintaan) return; // sudah ada isian yang lebih baru
