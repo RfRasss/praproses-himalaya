@@ -22,9 +22,14 @@ membagi data latih dan uji. Pemilihan algoritma dan evaluasi model ada di
 Butuh Python 3.10 ke atas.
 
 ```bash
+python -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
 python jalankan.py
 ```
+
+Perintah `source` cukup sekali per terminal. Tanpa lingkungan virtual yang
+aktif, `python` memakai Python sistem yang tidak punya scikit-learn.
 
 Perintah itu mengunduh data mentah kalau belum ada, memprosesnya, lalu menulis
 tiga berkas ke `data/olahan/` dan satu ringkasan ke `catatan/ringkasan-data.md`.
