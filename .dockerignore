@@ -1,0 +1,11 @@
+.git
+.venv
+.hallmark
+__pycache__
+*.pyc
+data/mentah
+model
+catatan
+uji
+BELAJAR-lokal.md
+.ipynb_checkpoints

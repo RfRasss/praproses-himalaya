@@ -172,6 +172,44 @@ ke 0,701. Kami belum memeriksa apakah kolom itu dicatat sebelum atau sesudah
 hasil pendakian, jadi sebagian sinyalnya bisa jadi bocoran. Batasan lengkap ada
 di halaman Model dan di `catatan/adr-aplikasi.md`.
 
+## Menjalankan untuk tim
+
+Ada tiga cara agar teman satu tim bisa membuka aplikasinya tanpa `localhost`.
+Aplikasinya belum punya login dan pembatas laju, jadi jangan dibiarkan terbuka
+lama di internet publik.
+
+Cara tercepat adalah terowongan sementara. Jalankan server seperti biasa, lalu di
+terminal lain:
+
+```bash
+cloudflared tunnel --url http://localhost:8000
+```
+
+Perintah itu mencetak alamat `https://...trycloudflare.com` yang bisa dibuka siapa
+saja selama terminalnya hidup. Tutup dengan Ctrl+C kalau sudah selesai.
+
+Kalau semua anggota satu jaringan Wi-Fi, jalankan server dengan
+`uvicorn aplikasi.main:app --host 0.0.0.0` dan bagikan `http://<alamat-IP-laptop-Anda>:8000`.
+Firewall laptop harus mengizinkan port 8000, dan sebagian Wi-Fi kampus memisahkan
+perangkat satu sama lain sehingga cara ini tidak jalan.
+
+Untuk alamat yang tetap, pakai layanan yang menjalankan Docker (misalnya Render,
+Fly.io, Railway, atau Google Cloud Run) dan arahkan ke repositori ini. `Dockerfile`
+sudah siap: ia melatih model saat image dibangun, mengikuti variabel `PORT` dari
+layanan, dan berjalan sebagai pengguna biasa. Pengaturan yang perlu diisi:
+
+- Jalur pemeriksaan kesehatan: `/healthz`
+- Memori: minimal 512 MB, sebaiknya 1 GB. Server memakai sekitar 350 MB setelah
+  dipakai berat.
+- Build memakan sekitar satu menit karena ada pelatihan model.
+
+Mencoba image di laptop:
+
+```bash
+docker build -t zenith .
+docker run --rm -p 8000:8000 zenith
+```
+
 ## Mengubah teks dan bahasa
 
 Halaman punya dua bahasa, Indonesia dan Inggris, dengan tombol di pojok kanan

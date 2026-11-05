@@ -1,5 +1,6 @@
 """API dan halaman web. Jalankan: uvicorn aplikasi.main:app"""
 
+from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Literal
 
@@ -14,7 +15,18 @@ from .katalog import katalog
 WEB = Path(__file__).parent / "web"
 MUSIM = Literal["Spring", "Autumn", "Winter", "Summer"]
 
-app = FastAPI(title="Zenith")
+@asynccontextmanager
+async def umur(_app):
+    # Muat model, metrik, dan katalog saat server menyala. Kalau berkasnya hilang
+    # (misalnya lupa menjalankan pemodelan.latih), server berhenti di sini dengan
+    # pesan jelas, bukan gagal pada permintaan pertama.
+    layanan.muat_model()
+    layanan.metrik()
+    katalog()
+    yield
+
+
+app = FastAPI(title="Zenith", lifespan=umur)
 
 
 class Masukan(BaseModel):
@@ -62,6 +74,11 @@ def prediksi(masukan: Masukan):
     }
 
 
+@app.get("/healthz")
+def sehat():
+    return {"status": "ok"}
+
+
 @app.get("/api/model")
 def model():
     return layanan.metrik()
@@ -73,11 +90,15 @@ def beranda():
 
 
 class StatisTanpaSimpan(StaticFiles):
-    """Berkas statis selalu divalidasi ulang, supaya browser tidak memakai CSS lama."""
+    """Kode halaman selalu divalidasi ulang, supaya browser tidak memakai CSS lama.
+
+    Foto dan ikon jarang berubah dan besar, jadi boleh disimpan sehari.
+    """
 
     async def get_response(self, path, scope):
         r = await super().get_response(path, scope)
-        r.headers["Cache-Control"] = "no-cache"
+        berat = path.startswith("foto/") or path.startswith("ikon.")
+        r.headers["Cache-Control"] = "public, max-age=86400" if berat else "no-cache"
         return r
 
 
