@@ -72,7 +72,7 @@ function baca() {
   const m = {
     peak_id: f.elements.peak_id.value,
     season: f.elements.season.value,
-    age: angkaDari("age", 10, 90),
+    age: angkaDari("age", 16, 85),
     sex: f.elements.sex.value,
     citizenship: f.elements.citizenship.value,
     role: f.elements.role.value,

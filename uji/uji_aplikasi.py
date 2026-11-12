@@ -56,13 +56,13 @@ def main() -> int:
             f"{tanpa:.2f} lawan {d['peluang']:.2f}")
 
     print("\n3. Masukan yang salah ditolak")
-    for nama, ubah in [("usia di bawah batas", {"age": 3}), ("tim nol", {"team_size": 0}),
+    for nama, ubah in [("usia di bawah batas", {"age": 12}), ("tim nol", {"team_size": 0}),
                        ("musim tak dikenal", {"season": "Monsoon"}), ("negara tak dikenal", {"citizenship": "Atlantis"}),
                        ("peran tak dikenal", {"role": "Wizard"}), ("puncak tak dikenal", {"peak_id": "XXXX"})]:
         periksa(nama + " memberi 422", c.post("/api/prediksi", json={**DASAR, **ubah}).status_code == 422)
 
     print("\n4. Peringatan di luar sebaran")
-    periksa("usia 12 memicu peringatan", bool(c.post("/api/prediksi", json={**DASAR, "age": 12}).json()["peringatan"]))
+    periksa("usia 17 memicu peringatan", bool(c.post("/api/prediksi", json={**DASAR, "age": 17}).json()["peringatan"]))
     periksa("masukan wajar tanpa peringatan", d["peringatan"] == [])
     periksa("solo dengan tim besar memicu peringatan",
             bool(c.post("/api/prediksi", json={**DASAR, "solo": True}).json()["peringatan"]))

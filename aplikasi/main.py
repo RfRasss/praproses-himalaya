@@ -32,7 +32,7 @@ app = FastAPI(title="Zenith", lifespan=umur)
 class Masukan(BaseModel):
     peak_id: str
     season: MUSIM
-    age: int = Field(ge=10, le=90)
+    age: int = Field(ge=16, le=85)  # di bawah 16 hanya 21 baris data, model tidak punya dasar
     sex: Literal["M", "F"]
     citizenship: str
     role: str

@@ -22,7 +22,10 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import (
     accuracy_score,
     brier_score_loss,
+    confusion_matrix,
     f1_score,
+    precision_score,
+    recall_score,
     roc_auc_score,
 )
 from sklearn.model_selection import cross_val_score
@@ -51,11 +54,15 @@ def kandidat() -> dict[str, Pipeline]:
     }
 
 
-def nilai(y, proba) -> dict[str, float]:
+def nilai(y, proba) -> dict:
     tebak = proba >= 0.5
     return {
         "akurasi": accuracy_score(y, tebak),
+        "presisi": precision_score(y, tebak),
+        "recall": recall_score(y, tebak),
         "f1": f1_score(y, tebak),
+        # [[benar gagal, salah berhasil], [salah gagal, benar berhasil]]
+        "matriks": confusion_matrix(y, tebak).tolist(),
         "auc": roc_auc_score(y, proba),
         "brier": brier_score_loss(y, proba),
     }

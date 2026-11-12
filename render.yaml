@@ -1,0 +1,9 @@
+# Blueprint Render: New > Blueprint, pilih repo ini. Gambar dibangun dari Dockerfile.
+services:
+  - type: web
+    name: zenith
+    runtime: docker
+    plan: free
+    region: singapore
+    healthCheckPath: /healthz
+    autoDeployTrigger: commit
