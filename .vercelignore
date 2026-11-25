@@ -1,0 +1,18 @@
+# Berkas yang tidak dibutuhkan server. Yang dipakai: aplikasi/, praproses/, model/,
+# data/olahan/himalaya_bersih.parquet, requirements.txt, pyproject.toml.
+.git
+.venv
+.hallmark
+.ruff_cache
+__pycache__
+data/mentah
+data/olahan/latih.parquet
+data/olahan/uji.parquet
+catatan
+uji
+pemodelan
+design.md
+BELAJAR-lokal.md
+Dockerfile
+.dockerignore
+render.yaml

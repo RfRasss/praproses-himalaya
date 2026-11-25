@@ -7,4 +7,4 @@ __pycache__/
 # Bahan belajar pribadi, tidak ikut ke repositori
 BELAJAR-lokal.md
 .hallmark/
-model/
+.vercel/

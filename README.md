@@ -51,7 +51,7 @@ Untuk memastikan hasilnya benar:
 ```bash
 python uji/uji_praproses.py    # 29 pemeriksaan, harus lulus semua
 python uji/cek_kewarasan.py    # memastikan data punya sinyal dan tidak bocor
-python uji/uji_aplikasi.py     # 19 pemeriksaan API dan model, jalankan setelah melatih
+python uji/uji_aplikasi.py     # 20 pemeriksaan API dan model, jalankan setelah melatih
 ```
 
 ## Isi repositori
@@ -195,13 +195,14 @@ perangkat satu sama lain sehingga cara ini tidak jalan.
 
 Untuk alamat yang tetap, pakai layanan yang menjalankan Docker (misalnya Render,
 Fly.io, Railway, atau Google Cloud Run) dan arahkan ke repositori ini. `Dockerfile`
-sudah siap: ia melatih model saat image dibangun, mengikuti variabel `PORT` dari
-layanan, dan berjalan sebagai pengguna biasa. Pengaturan yang perlu diisi:
+sudah siap: ia memakai model yang sudah dilatih di `model/` (ikut di repositori),
+mengikuti variabel `PORT` dari layanan, dan berjalan sebagai pengguna biasa. Pengaturan yang perlu diisi:
 
 - Jalur pemeriksaan kesehatan: `/healthz`
 - Memori: minimal 512 MB, sebaiknya 1 GB. Server memakai sekitar 350 MB setelah
   dipakai berat.
-- Build memakan sekitar satu menit karena ada pelatihan model.
+- Build cepat karena tidak ada pelatihan. Melatih ulang butuh sekitar 1 GB memori
+  (puncak terukur 919 MB), jadi lakukan di laptop lalu commit `model/`.
 
 Mencoba image di laptop:
 
@@ -209,6 +210,19 @@ Mencoba image di laptop:
 docker build -t zenith .
 docker run --rm -p 8000:8000 zenith
 ```
+
+## Terbit di Vercel
+
+Aplikasi ini berjalan di https://zenith-vercel.vercel.app. `app.py` adalah titik masuknya
+(Vercel mencari variabel `app` di sana), `.vercelignore` membuang berkas yang tidak dipakai
+server, dan pustaka dibaca dari `requirements.txt`. Deploy ulang dari folder proyek:
+
+```bash
+vercel deploy --prod --yes
+```
+
+Setelah lama tidak dibuka, panggilan pertama bisa lambat beberapa detik karena fungsinya
+memuat pandas dan scikit-learn dari awal.
 
 ## Mengubah teks dan bahasa
 

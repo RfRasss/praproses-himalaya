@@ -1,5 +1,6 @@
-# Zenith: satu kontainer, satu proses. Model dilatih saat image dibangun, jadi
-# versi scikit-learn yang melatih sama dengan yang memuat.
+# Zenith: satu kontainer, satu proses. Model sudah dilatih dan ikut di repositori
+# (model/). Versi pustaka dikunci di requirements.txt supaya model tetap terbaca.
+# Melatih ulang: python -m pemodelan.latih, lalu commit model/.
 FROM python:3.12-slim
 
 ENV PYTHONUNBUFFERED=1 PIP_NO_CACHE_DIR=1
@@ -9,10 +10,9 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 COPY praproses ./praproses
-COPY pemodelan ./pemodelan
 COPY aplikasi ./aplikasi
-COPY data/olahan ./data/olahan
-RUN python -m pemodelan.latih
+COPY model ./model
+COPY data/olahan/himalaya_bersih.parquet ./data/olahan/himalaya_bersih.parquet
 
 RUN useradd --create-home zenith && chown -R zenith /app
 USER zenith
