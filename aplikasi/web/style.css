@@ -144,6 +144,10 @@ input[aria-invalid="true"] { border-color: var(--color-error); }
 .register .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .register tr.menang td, .register tr.menang th { font-weight: 500; color: var(--color-accent); }
 .register tbody th { font-weight: 500; }
+/* Tabel di dalam dua kolom: kepala boleh turun baris dan pembungkusnya menggulir bila masih sempit, supaya tidak pernah menimpa kolom sebelahnya. */
+.register thead th.num { white-space: normal; }
+.grid2 .register th, .grid2 .register td { padding-inline: var(--space-xs); }
+.tabel-gulir { overflow-x: auto; }
 .register tbody tr { transition: background-color var(--dur-micro) var(--ease-out); }
 .register tbody tr:hover, .register tbody tr:focus-visible { background: var(--color-paper-2); }
 .sel { position: relative; width: 96px; }
